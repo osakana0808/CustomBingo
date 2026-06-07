@@ -5,6 +5,7 @@ import '../../models/bingo_list.dart';
 import '../../providers/draw_provider.dart';
 import '../../providers/list_provider.dart';
 import 'history_screen.dart';
+import 'lottery_animation.dart';
 
 class DrawScreen extends ConsumerStatefulWidget {
   const DrawScreen({super.key});
@@ -106,18 +107,32 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
                     'ボタンを押して抽選開始',
                     style: Theme.of(context).textTheme.titleMedium,
                   )
-                : Text(
-                    lastDrawn,
-                    key: ValueKey(lastDrawn),
-                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                    textAlign: TextAlign.center,
-                  )
-                    .animate()
-                    .scale(begin: const Offset(0.5, 0.5), duration: 300.ms)
-                    .fadeIn(),
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '抽選結果',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.6),
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        lastDrawn,
+                        key: ValueKey(lastDrawn),
+                        style:
+                            Theme.of(context).textTheme.displayLarge?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      Theme.of(context).colorScheme.primary,
+                                ),
+                        textAlign: TextAlign.center,
+                      ).animate().fadeIn(duration: 400.ms),
+                    ],
+                  ),
           ),
         ),
         Padding(
@@ -153,8 +168,25 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
 
   Future<void> _draw() async {
     setState(() => _drawing = true);
-    await Future.delayed(const Duration(milliseconds: 300));
+    // 先に結果を確定させてからアニメーション表示
     ref.read(drawProvider.notifier).drawNext();
-    setState(() => _drawing = false);
+    final drawnItem = ref.read(drawProvider)?.lastDrawn;
+    if (drawnItem != null && mounted) {
+      await _showLotteryAnimation(drawnItem);
+    }
+    if (mounted) setState(() => _drawing = false);
+  }
+
+  Future<void> _showLotteryAnimation(String item) async {
+    final nav = Navigator.of(context);
+    await showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.transparent,
+      pageBuilder: (_, __, ___) => LotteryAnimationWidget(
+        item: item,
+        onComplete: nav.pop,
+      ),
+    );
   }
 }

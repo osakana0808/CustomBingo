@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 340">
+  <defs>
+    <!-- 木目グラデーション（ドラム正面） -->
+    <linearGradient id="woodFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#E8C87A"/>
+      <stop offset="30%"  stop-color="#D4A84B"/>
+      <stop offset="60%"  stop-color="#C49B3C"/>
+      <stop offset="100%" stop-color="#B8892E"/>
+    </linearGradient>
+    <!-- 木目グラデーション（側面・奥行き） -->
+    <linearGradient id="woodSide" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#A07828"/>
+      <stop offset="100%" stop-color="#C49B3C"/>
+    </linearGradient>
+    <!-- ベース木目 -->
+    <linearGradient id="woodBase" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#D4A84B"/>
+      <stop offset="100%" stop-color="#A07828"/>
+    </linearGradient>
+    <!-- トレイ -->
+    <linearGradient id="trayGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E8E8E8"/>
+    </linearGradient>
+    <!-- 金属軸 -->
+    <radialGradient id="metalHub" cx="50%" cy="35%" r="60%">
+      <stop offset="0%"   stop-color="#E0E0E0"/>
+      <stop offset="60%"  stop-color="#9E9E9E"/>
+      <stop offset="100%" stop-color="#616161"/>
+    </radialGradient>
+    <!-- ハンドル（黄色ボール） -->
+    <radialGradient id="handleBall" cx="35%" cy="30%" r="60%">
+      <stop offset="0%"   stop-color="#FFF176"/>
+      <stop offset="50%"  stop-color="#F9A825"/>
+      <stop offset="100%" stop-color="#E65100"/>
+    </radialGradient>
+    <!-- ドロップシャドウ -->
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="4" dy="6" stdDeviation="6" flood-color="#00000033"/>
+    </filter>
+    <!-- 木目テクスチャ用パターン -->
+    <pattern id="grain" patternUnits="userSpaceOnUse" width="40" height="200" patternTransform="rotate(-20)">
+      <rect width="40" height="200" fill="none"/>
+      <line x1="8"  y1="0" x2="8"  y2="200" stroke="#C08B30" stroke-width="0.5" opacity="0.4"/>
+      <line x1="18" y1="0" x2="18" y2="200" stroke="#C08B30" stroke-width="0.3" opacity="0.25"/>
+      <line x1="30" y1="0" x2="30" y2="200" stroke="#C08B30" stroke-width="0.5" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- ========== ベース台 ========== -->
+  <!-- 台の奥行き（側面） -->
+  <rect x="40" y="278" width="240" height="14" rx="3" fill="url(#woodSide)" filter="url(#shadow)"/>
+  <!-- 台の上面 -->
+  <rect x="35" y="264" width="250" height="20" rx="4" fill="url(#woodBase)"/>
+  <rect x="35" y="264" width="250" height="20" rx="4" fill="url(#grain)" opacity="0.4"/>
+  <!-- 台の縁取り -->
+  <rect x="35" y="264" width="250" height="20" rx="4" fill="none" stroke="#8B6914" stroke-width="1.5"/>
+
+  <!-- ========== スタンド（支柱） ========== -->
+  <!-- 右支柱 -->
+  <polygon points="195,270 215,270 190,160 170,160" fill="url(#woodSide)"/>
+  <polygon points="195,270 215,270 190,160 170,160" fill="url(#grain)" opacity="0.3"/>
+  <polygon points="195,270 215,270 190,160 170,160" fill="none" stroke="#8B6914" stroke-width="1"/>
+
+  <!-- ========== トレイ（受け皿） ========== -->
+  <g filter="url(#shadow)">
+    <!-- トレイ本体 -->
+    <rect x="148" y="240" width="110" height="28" rx="6" fill="url(#trayGrad)"/>
+    <!-- トレイの縁 -->
+    <rect x="148" y="240" width="110" height="28" rx="6" fill="none" stroke="#CCCCCC" stroke-width="2"/>
+    <!-- トレイの内側の影 -->
+    <rect x="152" y="244" width="102" height="20" rx="4" fill="#F5F5F5" stroke="#DDDDDD" stroke-width="1"/>
+  </g>
+
+  <!-- ========== ドラム本体（八角形） ========== -->
+  <!-- 八角形の奥行き（右側面） -->
+  <polygon points="240,80 255,90 255,210 240,220" fill="url(#woodSide)" filter="url(#shadow)"/>
+  <polygon points="240,80 255,90 255,210 240,220" fill="none" stroke="#8B6914" stroke-width="1"/>
+
+  <!-- 八角形正面 -->
+  <!-- 八角形の頂点（中心160,150 半径110） -->
+  <polygon
+    points="
+      160,42
+      206,57
+      240,92
+      240,208
+      206,243
+      114,243
+      80,208
+      80,92
+      114,57
+    "
+    fill="url(#woodFace)"
+    filter="url(#shadow)"
+  />
+  <!-- 木目テクスチャオーバーレイ -->
+  <polygon
+    points="160,42 206,57 240,92 240,208 206,243 114,243 80,208 80,92 114,57"
+    fill="url(#grain)"
+    opacity="0.35"
+  />
+
+  <!-- 八角形の縁取り（輪郭） -->
+  <polygon
+    points="160,42 206,57 240,92 240,208 206,243 114,243 80,208 80,92 114,57"
+    fill="none"
+    stroke="#8B6914"
+    stroke-width="3"
+  />
+
+  <!-- ドラム中央の分割線（上下） -->
+  <line x1="80" y1="150" x2="240" y2="150" stroke="#B8892E" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- ========== 中央の金属ハブ ========== -->
+  <!-- 外リング -->
+  <circle cx="160" cy="150" r="30" fill="#9E9E9E"/>
+  <!-- ハブ本体 -->
+  <circle cx="160" cy="150" r="26" fill="url(#metalHub)"/>
+  <!-- 内リング -->
+  <circle cx="160" cy="150" r="18" fill="none" stroke="#757575" stroke-width="1.5"/>
+  <!-- 矢印テキスト -->
+  <text x="160" y="144" text-anchor="middle" font-size="7" fill="#424242" font-family="sans-serif">で→</text>
+  <text x="160" y="153" text-anchor="middle" font-size="7" fill="#424242" font-family="sans-serif">ぐるぐる</text>
+  <text x="160" y="162" text-anchor="middle" font-size="6" fill="#424242" font-family="sans-serif">まわしてね</text>
+  <!-- 中央ボルト -->
+  <circle cx="160" cy="150" r="6" fill="#BDBDBD" stroke="#757575" stroke-width="1"/>
+  <circle cx="160" cy="150" r="3" fill="#9E9E9E"/>
+
+  <!-- 左軸ピン -->
+  <rect x="54" y="145" width="26" height="10" rx="5" fill="#9E9E9E" stroke="#757575" stroke-width="1"/>
+  <!-- 右軸ピン -->
+  <rect x="240" y="145" width="26" height="10" rx="5" fill="#9E9E9E" stroke="#757575" stroke-width="1"/>
+  <!-- 軸ピンのネジ頭 -->
+  <circle cx="67" cy="150" r="5" fill="url(#metalHub)" stroke="#757575" stroke-width="0.5"/>
+  <circle cx="253" cy="150" r="5" fill="url(#metalHub)" stroke="#757575" stroke-width="0.5"/>
+
+  <!-- ========== ハンドル（左側・黄色ボール） ========== -->
+  <!-- ハンドル棒 -->
+  <rect x="28" y="147" width="30" height="6" rx="3" fill="#9E9E9E" stroke="#757575" stroke-width="1"/>
+  <!-- 黄色ボール -->
+  <circle cx="24" cy="150" r="12" fill="url(#handleBall)" filter="url(#shadow)"/>
+  <circle cx="20" cy="145" r="4" fill="white" opacity="0.4"/>
+
+  <!-- ========== 投入口（上部） ========== -->
+  <ellipse cx="160" cy="44" rx="12" ry="5" fill="#8B6914" opacity="0.7"/>
+  <ellipse cx="160" cy="43" rx="10" ry="3" fill="#5D4037" opacity="0.8"/>
+
+  <!-- ========== 排出口（右下、トレイへ） ========== -->
+  <path d="M220,220 Q235,230 240,242" stroke="#8B6914" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <circle cx="240" cy="243" r="5" fill="#8B6914"/>
+
+  <!-- ========== ハイライト（光沢） ========== -->
+  <ellipse cx="130" cy="90" rx="35" ry="20" fill="white" opacity="0.12" transform="rotate(-15, 130, 90)"/>
+</svg>
