@@ -30,8 +30,8 @@ class ShareService {
       } else if (line.startsWith('フリーマス:')) {
         hasFreeSpace = line.contains('あり');
       } else if (pastHeader || (line.trim().isEmpty && name.isNotEmpty)) {
+        pastHeader = true; // 空行でもフラグを立てて、以降の単語行を正しく処理する
         if (line.trim().isNotEmpty) {
-          pastHeader = true;
           words.addAll(
               line.split(',').map((w) => w.trim()).where((w) => w.isNotEmpty));
         }
