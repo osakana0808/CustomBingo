@@ -32,8 +32,13 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
 
   @override
   void dispose() {
-    _nameCtrl.dispose();
-    _descCtrl.dispose();
+    // フレーム終了後に破棄することで InputDecoration アニメーションとの競合を回避
+    final name = _nameCtrl;
+    final desc = _descCtrl;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      name.dispose();
+      desc.dispose();
+    });
     super.dispose();
   }
 
@@ -130,29 +135,11 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
     }
   }
 
-  Future<String?> _showWordDialog(String? initial) async {
-    final ctrl = TextEditingController(text: initial);
-    final result = await showDialog<String>(
+  Future<String?> _showWordDialog(String? initial) {
+    return showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(initial == null ? '単語を追加' : '単語を編集'),
-        content: TextField(
-          controller: ctrl,
-          autofocus: true,
-          decoration: const InputDecoration(hintText: '単語を入力'),
-          onSubmitted: (v) => Navigator.pop(ctx, v),
-        ),
-        actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx), child: const Text('キャンセル')),
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, ctrl.text),
-              child: const Text('OK')),
-        ],
-      ),
+      builder: (ctx) => _WordDialog(initial: initial),
     );
-    ctrl.dispose();
-    return result;
   }
 
   Future<void> _save() async {
@@ -172,5 +159,49 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
     );
     await ref.read(bingoListsProvider.notifier).save(list);
     if (mounted) Navigator.pop(context);
+  }
+}
+
+// コントローラーのライフサイクルを自身で管理するダイアログ
+class _WordDialog extends StatefulWidget {
+  const _WordDialog({this.initial});
+  final String? initial;
+
+  @override
+  State<_WordDialog> createState() => _WordDialogState();
+}
+
+class _WordDialogState extends State<_WordDialog> {
+  // TextEditingController はネイティブリソースを持たないため、
+  // FocusNode の非同期通知との競合を避けるために明示的 dispose を行わず GC に委ねる
+  final TextEditingController _ctrl = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl.text = widget.initial ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(widget.initial == null ? '単語を追加' : '単語を編集'),
+      content: TextField(
+        controller: _ctrl,
+        autofocus: true,
+        decoration: const InputDecoration(hintText: '単語を入力'),
+        onSubmitted: (v) => Navigator.pop(context, v),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('キャンセル'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, _ctrl.text),
+          child: const Text('OK'),
+        ),
+      ],
+    );
   }
 }

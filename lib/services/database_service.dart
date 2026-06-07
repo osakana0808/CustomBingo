@@ -1,3 +1,4 @@
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -10,7 +11,10 @@ class DatabaseService {
   }
 
   static Future<Database> _init() async {
-    final path = join(await getDatabasesPath(), 'custom_bingo.db');
+    // iOS 18 以降はデフォルトの getDatabasesPath() が保護対象になる場合があるため
+    // ApplicationSupportDirectory を使用する
+    final dir = await getApplicationSupportDirectory();
+    final path = join(dir.path, 'custom_bingo.db');
     return openDatabase(
       path,
       version: 1,

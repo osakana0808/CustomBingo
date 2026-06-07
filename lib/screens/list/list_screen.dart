@@ -113,13 +113,27 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(
-        title,
-        style: Theme.of(context)
-            .textTheme
-            .labelLarge
-            ?.copyWith(color: Theme.of(context).colorScheme.primary),
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+      child: Row(
+        children: [
+          Container(
+            width: 3,
+            height: 14,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondary,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                  letterSpacing: 1.5,
+                  fontSize: 12,
+                ),
+          ),
+        ],
       ),
     );
   }
@@ -140,25 +154,72 @@ class _ListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(list.isPreset ? Icons.star_outline : Icons.list_alt),
-      title: Text(list.name),
-      subtitle: Text(
-        '${list.items.length}件'
-        '${list.description.isNotEmpty ? ' · ${list.description}' : ''}',
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: Material(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: cs.outline,
+                width: 1,
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Icon(
+                  list.isPreset ? Icons.star_outline : Icons.list_alt,
+                  color: cs.secondary,
+                  size: 22,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        list.name,
+                        style: TextStyle(
+                          color: cs.onSurface,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                      if (list.items.isNotEmpty || list.description.isNotEmpty)
+                        Text(
+                          '${list.items.length}件'
+                          '${list.description.isNotEmpty ? '  ${list.description}' : ''}',
+                          style: TextStyle(color: cs.onSurfaceVariant, fontSize: 12),
+                        ),
+                    ],
+                  ),
+                ),
+                if (onShare != null)
+                  IconButton(
+                    icon: Icon(Icons.share_outlined, color: cs.onSurfaceVariant),
+                    onPressed: onShare,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                if (onDelete != null)
+                  IconButton(
+                    icon: Icon(Icons.delete_outline, color: cs.onSurfaceVariant),
+                    onPressed: onDelete,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                if (onTap != null)
+                  Icon(Icons.chevron_right, color: cs.onSurfaceVariant, size: 20),
+              ],
+            ),
+          ),
+        ),
       ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (onShare != null)
-            IconButton(
-                icon: const Icon(Icons.share_outlined), onPressed: onShare),
-          if (onDelete != null)
-            IconButton(
-                icon: const Icon(Icons.delete_outline), onPressed: onDelete),
-        ],
-      ),
-      onTap: onTap,
     );
   }
 }

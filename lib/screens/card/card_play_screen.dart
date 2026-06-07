@@ -41,15 +41,21 @@ class CardPlayScreen extends ConsumerWidget {
           if (card.hasBingo)
             Container(
               width: double.infinity,
-              color: Colors.amber,
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF7A1020), Color(0xFFCC3333), Color(0xFF7A1020)],
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 14),
               child: const Text(
-                '🎉 BINGO! 🎉',
+                '🎉　BINGO!　🎉',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87),
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFF0D060),
+                  letterSpacing: 4,
+                ),
               ),
             ),
           Expanded(
@@ -104,29 +110,33 @@ class _BingoCell extends StatelessWidget {
 
     Color bgColor;
     Color textColor;
+    Color borderColor;
+
     if (isFree) {
-      bgColor = colorScheme.primaryContainer;
-      textColor = colorScheme.onPrimaryContainer;
+      bgColor = const Color(0xFF3A2E00);   // 金の暗め
+      textColor = const Color(0xFFF0D060); // 金明るめ
+      borderColor = const Color(0xFFD4AF37);
     } else if (isMarked) {
-      bgColor = colorScheme.primary.withAlpha(180);
-      textColor = colorScheme.onPrimary;
+      bgColor = const Color(0xFF7A1020);   // 朱赤暗め
+      textColor = const Color(0xFFF5F0E8);
+      borderColor = const Color(0xFFCC3333);
     } else {
       bgColor = colorScheme.surfaceContainerHighest;
       textColor = colorScheme.onSurface;
+      borderColor = colorScheme.outlineVariant;
     }
 
     return GestureDetector(
       onTap: isFree ? null : onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 180),
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isMarked
-                ? colorScheme.primary
-                : colorScheme.outlineVariant,
-          ),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: borderColor, width: isMarked ? 1.5 : 1),
+          boxShadow: isMarked
+              ? [BoxShadow(color: const Color(0xFFCC3333).withValues(alpha: 0.3), blurRadius: 6)]
+              : null,
         ),
         child: Center(
           child: FittedBox(
@@ -138,8 +148,7 @@ class _BingoCell extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: textColor,
-                  fontWeight:
-                      isMarked ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: (isMarked || isFree) ? FontWeight.bold : FontWeight.normal,
                   fontSize: 14,
                 ),
               ),
