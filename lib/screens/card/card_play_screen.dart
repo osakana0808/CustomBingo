@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/bingo_card.dart';
 import '../../providers/card_provider.dart';
 
@@ -8,20 +9,20 @@ class CardPlayScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final card = ref.watch(cardProvider);
     if (card == null) {
-      return const Scaffold(body: Center(child: Text('カードがありません')));
+      return Scaffold(body: Center(child: Text(l10n.cardPlayEmpty)));
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ビンゴカード'),
+        title: Text(l10n.cardPlayTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'リセット',
+            tooltip: l10n.cardPlayReset,
             onPressed: () {
-              // セルの isMarked をすべてリセット（フリーマスは除く）
               var updated = card;
               for (int r = 0; r < card.size; r++) {
                 for (int c = 0; c < card.size; c++) {
@@ -47,10 +48,10 @@ class CardPlayScreen extends ConsumerWidget {
                 ),
               ),
               padding: const EdgeInsets.symmetric(vertical: 14),
-              child: const Text(
-                '🎉　BINGO!　🎉',
+              child: Text(
+                l10n.cardPlayBingo,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFFF0D060),
@@ -113,11 +114,11 @@ class _BingoCell extends StatelessWidget {
     Color borderColor;
 
     if (isFree) {
-      bgColor = const Color(0xFF3A2E00);   // 金の暗め
-      textColor = const Color(0xFFF0D060); // 金明るめ
+      bgColor = const Color(0xFF3A2E00);
+      textColor = const Color(0xFFF0D060);
       borderColor = const Color(0xFFD4AF37);
     } else if (isMarked) {
-      bgColor = const Color(0xFF7A1020);   // 朱赤暗め
+      bgColor = const Color(0xFF7A1020);
       textColor = const Color(0xFFF5F0E8);
       borderColor = const Color(0xFFCC3333);
     } else {
@@ -135,7 +136,9 @@ class _BingoCell extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: borderColor, width: isMarked ? 1.5 : 1),
           boxShadow: isMarked
-              ? [BoxShadow(color: const Color(0xFFCC3333).withValues(alpha: 0.3), blurRadius: 6)]
+              ? [BoxShadow(
+                  color: const Color(0xFFCC3333).withValues(alpha: 0.3),
+                  blurRadius: 6)]
               : null,
         ),
         child: Center(

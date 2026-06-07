@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../l10n/app_localizations.dart';
 
 class LotteryAnimationWidget extends StatefulWidget {
   const LotteryAnimationWidget({
@@ -236,14 +237,14 @@ class _LotteryAnimationWidgetState extends State<LotteryAnimationWidget>
 
                 // ─── スキップヒント ───
                 if (_numberOpacity.value < 0.5)
-                  const Positioned(
+                  Positioned(
                     bottom: 52,
                     left: 0,
                     right: 0,
                     child: Text(
-                      'タップでスキップ',
+                      AppLocalizations.of(context).drawSkip,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white54,
                         fontSize: 14,
                         letterSpacing: 1.0,

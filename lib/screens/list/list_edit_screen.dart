@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/bingo_item.dart';
 import '../../models/bingo_list.dart';
 import '../../providers/list_provider.dart';
@@ -32,7 +33,6 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
 
   @override
   void dispose() {
-    // フレーム終了後に破棄することで InputDecoration アニメーションとの競合を回避
     final name = _nameCtrl;
     final desc = _descCtrl;
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -44,14 +44,15 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final isEdit = widget.list != null;
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEdit ? 'リストを編集' : 'リストを作成'),
+        title: Text(isEdit ? l10n.editTitleEdit : l10n.editTitleCreate),
         actions: [
           TextButton(
             onPressed: _saving ? null : _save,
-            child: const Text('保存'),
+            child: Text(l10n.editSave),
           ),
         ],
       ),
@@ -60,22 +61,16 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
         children: [
           TextField(
             controller: _nameCtrl,
-            decoration: const InputDecoration(
-              labelText: 'リスト名',
-              border: OutlineInputBorder(),
-            ),
+            decoration: InputDecoration(labelText: l10n.editNameLabel),
           ),
           const SizedBox(height: 12),
           TextField(
             controller: _descCtrl,
-            decoration: const InputDecoration(
-              labelText: '概要（任意）',
-              border: OutlineInputBorder(),
-            ),
+            decoration: InputDecoration(labelText: l10n.editDescLabel),
           ),
           const SizedBox(height: 12),
           SwitchListTile(
-            title: const Text('フリーマス'),
+            title: Text(l10n.editFreeSpace),
             value: _hasFreeSpace,
             onChanged: (v) => setState(() => _hasFreeSpace = v),
             contentPadding: EdgeInsets.zero,
@@ -83,12 +78,12 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
           const Divider(),
           Row(
             children: [
-              Text('単語リスト（${_items.length}件）',
+              Text(l10n.editWords(_items.length),
                   style: Theme.of(context).textTheme.titleSmall),
               const Spacer(),
               TextButton.icon(
                 icon: const Icon(Icons.add),
-                label: const Text('追加'),
+                label: Text(l10n.editAddWord),
                 onPressed: _addItem,
               ),
             ],
@@ -143,9 +138,10 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
   }
 
   Future<void> _save() async {
+    final l10n = AppLocalizations.of(context);
     if (_nameCtrl.text.trim().isEmpty) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('リスト名を入力してください')));
+          .showSnackBar(SnackBar(content: Text(l10n.editNameRequired)));
       return;
     }
     setState(() => _saving = true);
@@ -162,7 +158,6 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
   }
 }
 
-// コントローラーのライフサイクルを自身で管理するダイアログ
 class _WordDialog extends StatefulWidget {
   const _WordDialog({this.initial});
   final String? initial;
@@ -172,8 +167,6 @@ class _WordDialog extends StatefulWidget {
 }
 
 class _WordDialogState extends State<_WordDialog> {
-  // TextEditingController はネイティブリソースを持たないため、
-  // FocusNode の非同期通知との競合を避けるために明示的 dispose を行わず GC に委ねる
   final TextEditingController _ctrl = TextEditingController();
 
   @override
@@ -184,22 +177,23 @@ class _WordDialogState extends State<_WordDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AlertDialog(
-      title: Text(widget.initial == null ? '単語を追加' : '単語を編集'),
+      title: Text(widget.initial == null ? l10n.editWordDialogAdd : l10n.editWordDialogEdit),
       content: TextField(
         controller: _ctrl,
         autofocus: true,
-        decoration: const InputDecoration(hintText: '単語を入力'),
+        decoration: InputDecoration(hintText: l10n.editWordHint),
         onSubmitted: (v) => Navigator.pop(context, v),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('キャンセル'),
+          child: Text(l10n.listCancel),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context, _ctrl.text),
-          child: const Text('OK'),
+          child: Text(l10n.editWordOk),
         ),
       ],
     );

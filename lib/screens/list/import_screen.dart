@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers/list_provider.dart';
 import '../../services/share_service.dart';
 
@@ -24,14 +25,15 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('リストをインポート')),
+      appBar: AppBar(title: Text(l10n.importTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('共有されたテキストを貼り付けてください'),
+            Text(l10n.importHint),
             const SizedBox(height: 8),
             Expanded(
               child: TextField(
@@ -39,7 +41,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
                 maxLines: null,
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
+                decoration: const InputDecoration(),
               ),
             ),
             if (_error != null)
@@ -47,20 +49,19 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
                 padding: const EdgeInsets.only(top: 8),
                 child: Text(
                   _error!,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.error),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
               ),
             const SizedBox(height: 16),
             OutlinedButton.icon(
               icon: const Icon(Icons.paste),
-              label: const Text('クリップボードから貼り付け'),
+              label: Text(l10n.importPaste),
               onPressed: _paste,
             ),
             const SizedBox(height: 8),
             FilledButton(
               onPressed: _import,
-              child: const Text('インポート'),
+              child: Text(l10n.importImport),
             ),
           ],
         ),
@@ -76,23 +77,24 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
   }
 
   Future<void> _import() async {
+    final l10n = AppLocalizations.of(context);
     setState(() => _error = null);
     final text = _controller.text.trim();
     if (text.isEmpty) {
-      setState(() => _error = 'テキストを入力してください');
+      setState(() => _error = l10n.importEmpty);
       return;
     }
     const uuid = Uuid();
     final list = ShareService.decode(text, uuid.v4());
     if (list == null) {
-      setState(() => _error = '形式が正しくありません。[ビンゴリスト]から始まるテキストを貼り付けてください');
+      setState(() => _error = l10n.importInvalid);
       return;
     }
     await ref.read(bingoListsProvider.notifier).save(list);
     if (mounted) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('「${list.name}」をインポートしました')),
+        SnackBar(content: Text(l10n.importSuccess(list.name))),
       );
     }
   }

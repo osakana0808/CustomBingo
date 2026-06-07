@@ -1,0 +1,111 @@
+{
+  "@@locale": "ja",
+
+  "navList": "リスト",
+  "navCard": "カード",
+  "navDraw": "抽選",
+
+  "listTitle": "ビンゴリスト",
+  "listImportTooltip": "インポート",
+  "listError": "エラー: {message}",
+  "@listError": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "listEmpty": "リストがありません",
+  "listSectionMy": "マイリスト",
+  "listSectionPreset": "プリセット",
+  "listDeleteTitle": "削除",
+  "listDeleteConfirm": "「{name}」を削除しますか？",
+  "@listDeleteConfirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "listCopied": "クリップボードにコピーしました",
+  "listCancel": "キャンセル",
+  "listDelete": "削除",
+  "listItemCount": "{count}件",
+  "@listItemCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "editTitleCreate": "リストを作成",
+  "editTitleEdit": "リストを編集",
+  "editSave": "保存",
+  "editNameLabel": "リスト名",
+  "editDescLabel": "概要（任意）",
+  "editFreeSpace": "フリーマス",
+  "editWords": "単語リスト（{count}件）",
+  "@editWords": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "editAddWord": "追加",
+  "editWordDialogAdd": "単語を追加",
+  "editWordDialogEdit": "単語を編集",
+  "editWordHint": "単語を入力",
+  "editWordOk": "OK",
+  "editNameRequired": "リスト名を入力してください",
+
+  "importTitle": "リストをインポート",
+  "importHint": "共有されたテキストを貼り付けてください",
+  "importPaste": "クリップボードから貼り付け",
+  "importImport": "インポート",
+  "importEmpty": "テキストを入力してください",
+  "importInvalid": "形式が正しくありません。[BingoList]から始まるテキストを貼り付けてください",
+  "importSuccess": "「{name}」をインポートしました",
+  "@importSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "cardSetupTitle": "カードを作成",
+  "cardSetupListLabel": "リストを選択",
+  "cardSetupSizeLabel": "マスのサイズ",
+  "cardSetupFreeSpace": "フリーマス（中央）",
+  "cardSetupGenerate": "カードを生成",
+  "cardSetupRequired": "必要な単語数: {needed}件（現在 {have}件）",
+  "@cardSetupRequired": {
+    "placeholders": {
+      "needed": { "type": "int" },
+      "have": { "type": "int" }
+    }
+  },
+
+  "cardPlayTitle": "ビンゴカード",
+  "cardPlayReset": "リセット",
+  "cardPlayEmpty": "カードがありません",
+  "cardPlayBingo": "🎉　BINGO!　🎉",
+
+  "drawTitle": "抽選",
+  "drawHistory": "履歴",
+  "drawStop": "終了",
+  "drawListLabel": "リストを選択",
+  "drawStart": "抽選スタート",
+  "drawRemaining": "残り {remaining} 件 / 抽選済み {drawn} 件",
+  "@drawRemaining": {
+    "placeholders": {
+      "remaining": { "type": "int" },
+      "drawn": { "type": "int" }
+    }
+  },
+  "drawHint": "ボタンを押して抽選開始",
+  "drawResult": "抽選結果",
+  "drawAllDone": "全て抽選済み",
+  "drawNext": "次を引く（残り{remaining}件）",
+  "@drawNext": {
+    "placeholders": { "remaining": { "type": "int" } }
+  },
+  "drawSkip": "タップでスキップ",
+
+  "historyTitle": "抽選履歴（{count}件）",
+  "@historyTitle": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "historyEmpty": "まだ抽選していません",
+
+  "presetNumberName": "数字ビンゴ",
+  "presetNumberDesc": "1〜75の数字",
+  "presetHiraganaName": "ひらがな",
+  "presetHiraganaDesc": "あ〜ん（46文字）",
+  "presetAlphabetName": "アルファベット",
+  "presetAlphabetDesc": "A〜Z",
+  "presetMahjongName": "麻雀の役",
+  "presetMahjongDesc": "麻雀の役一覧"
+}

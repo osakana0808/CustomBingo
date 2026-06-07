@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers/draw_provider.dart';
 
 class HistoryScreen extends ConsumerWidget {
@@ -7,13 +8,14 @@ class HistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final session = ref.watch(drawProvider);
     final drawn = session?.drawnItems ?? [];
 
     return Scaffold(
-      appBar: AppBar(title: Text('抽選履歴（${drawn.length}件）')),
+      appBar: AppBar(title: Text(l10n.historyTitle(drawn.length))),
       body: drawn.isEmpty
-          ? const Center(child: Text('まだ抽選していません'))
+          ? Center(child: Text(l10n.historyEmpty))
           : ListView.builder(
               itemCount: drawn.length,
               itemBuilder: (context, index) {

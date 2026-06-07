@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'screens/list/list_screen.dart';
 import 'screens/card/card_setup_screen.dart';
 import 'screens/draw/draw_screen.dart';
@@ -45,8 +47,15 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ビンゴメーカー',
+      title: 'Bingo Maker',
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('ja'), Locale('en')],
       theme: _buildTheme(),
       home: Scaffold(
         body: IndexedStack(index: _currentIndex, children: _screens),
@@ -286,27 +295,30 @@ class _WaNavigationBar extends StatelessWidget {
             ),
           ),
         ),
-        NavigationBar(
-          selectedIndex: currentIndex,
-          onDestinationSelected: onTap,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.format_list_bulleted),
-              selectedIcon: Icon(Icons.format_list_bulleted),
-              label: 'リスト',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.grid_view_outlined),
-              selectedIcon: Icon(Icons.grid_view),
-              label: 'カード',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.casino_outlined),
-              selectedIcon: Icon(Icons.casino),
-              label: '抽選',
-            ),
-          ],
-        ),
+        Builder(builder: (context) {
+          final l10n = AppLocalizations.of(context);
+          return NavigationBar(
+            selectedIndex: currentIndex,
+            onDestinationSelected: onTap,
+            destinations: [
+              NavigationDestination(
+                icon: const Icon(Icons.format_list_bulleted),
+                selectedIcon: const Icon(Icons.format_list_bulleted),
+                label: l10n.navList,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.grid_view_outlined),
+                selectedIcon: const Icon(Icons.grid_view),
+                label: l10n.navCard,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.casino_outlined),
+                selectedIcon: const Icon(Icons.casino),
+                label: l10n.navDraw,
+              ),
+            ],
+          );
+        }),
       ],
     );
   }

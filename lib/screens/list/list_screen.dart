@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/bingo_list.dart';
 import '../../providers/list_provider.dart';
 import '../../services/share_service.dart';
@@ -12,15 +13,16 @@ class ListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
     final listsAsync = ref.watch(bingoListsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ビンゴリスト'),
+        title: Text(l10n.listTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.download),
-            tooltip: 'インポート',
+            tooltip: l10n.listImportTooltip,
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const ImportScreen()),
@@ -30,28 +32,28 @@ class ListScreen extends ConsumerWidget {
       ),
       body: listsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('エラー: $e')),
+        error: (e, _) => Center(child: Text(l10n.listError(e.toString()))),
         data: (lists) {
           if (lists.isEmpty) {
-            return const Center(child: Text('リストがありません'));
+            return Center(child: Text(l10n.listEmpty));
           }
           final presets = lists.where((l) => l.isPreset).toList();
           final custom = lists.where((l) => !l.isPreset).toList();
           return ListView(
             children: [
               if (custom.isNotEmpty) ...[
-                const _SectionHeader('マイリスト'),
+                _SectionHeader(l10n.listSectionMy),
                 ...custom.map((list) => _ListTile(
                       list: list,
                       onTap: () => _openEdit(context, ref, list),
-                      onShare: () => _share(context, list),
-                      onDelete: () => _confirmDelete(context, ref, list),
+                      onShare: () => _share(context, list, l10n),
+                      onDelete: () => _confirmDelete(context, ref, list, l10n),
                     )),
               ],
-              const _SectionHeader('プリセット'),
+              _SectionHeader(l10n.listSectionPreset),
               ...presets.map((list) => _ListTile(
                     list: list,
-                    onShare: () => _share(context, list),
+                    onShare: () => _share(context, list, l10n),
                   )),
             ],
           );
@@ -71,31 +73,31 @@ class ListScreen extends ConsumerWidget {
     ).then((_) => ref.read(bingoListsProvider.notifier).reload());
   }
 
-  Future<void> _share(BuildContext context, BingoList list) async {
+  Future<void> _share(BuildContext context, BingoList list, AppLocalizations l10n) async {
     final text = ShareService.encode(list);
     await Clipboard.setData(ClipboardData(text: text));
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('クリップボードにコピーしました')),
+        SnackBar(content: Text(l10n.listCopied)),
       );
     }
   }
 
   Future<void> _confirmDelete(
-      BuildContext context, WidgetRef ref, BingoList list) async {
+      BuildContext context, WidgetRef ref, BingoList list, AppLocalizations l10n) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('削除'),
-        content: Text('「${list.name}」を削除しますか？'),
+        title: Text(l10n.listDeleteTitle),
+        content: Text(l10n.listDeleteConfirm(list.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('キャンセル'),
+            child: Text(l10n.listCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('削除'),
+            child: Text(l10n.listDelete),
           ),
         ],
       ),
@@ -152,9 +154,36 @@ class _ListTile extends StatelessWidget {
     this.onDelete,
   });
 
+  // プリセットは言語設定に応じてローカライズされた名前を表示
+  String _displayName(BuildContext context) {
+    if (!list.isPreset) return list.name;
+    final l10n = AppLocalizations.of(context);
+    switch (list.id) {
+      case 'preset_numbers':  return l10n.presetNumberName;
+      case 'preset_hiragana': return l10n.presetHiraganaName;
+      case 'preset_alphabet': return l10n.presetAlphabetName;
+      case 'preset_mahjong':  return l10n.presetMahjongName;
+      default: return list.name;
+    }
+  }
+
+  String _displayDesc(BuildContext context) {
+    if (!list.isPreset) return list.description;
+    final l10n = AppLocalizations.of(context);
+    switch (list.id) {
+      case 'preset_numbers':  return l10n.presetNumberDesc;
+      case 'preset_hiragana': return l10n.presetHiraganaDesc;
+      case 'preset_alphabet': return l10n.presetAlphabetDesc;
+      case 'preset_mahjong':  return l10n.presetMahjongDesc;
+      default: return list.description;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
+    final desc = _displayDesc(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Material(
@@ -166,10 +195,7 @@ class _ListTile extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: cs.outline,
-                width: 1,
-              ),
+              border: Border.all(color: cs.outline, width: 1),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
@@ -185,19 +211,18 @@ class _ListTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        list.name,
+                        _displayName(context),
                         style: TextStyle(
                           color: cs.onSurface,
                           fontWeight: FontWeight.w600,
                           fontSize: 15,
                         ),
                       ),
-                      if (list.items.isNotEmpty || list.description.isNotEmpty)
-                        Text(
-                          '${list.items.length}件'
-                          '${list.description.isNotEmpty ? '  ${list.description}' : ''}',
-                          style: TextStyle(color: cs.onSurfaceVariant, fontSize: 12),
-                        ),
+                      Text(
+                        '${l10n.listItemCount(list.items.length)}'
+                        '${desc.isNotEmpty ? '  $desc' : ''}',
+                        style: TextStyle(color: cs.onSurfaceVariant, fontSize: 12),
+                      ),
                     ],
                   ),
                 ),

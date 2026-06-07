@@ -1,20 +1,23 @@
-import 'package:flutter/services.dart';
 import '../models/bingo_item.dart';
 import '../models/bingo_list.dart';
 
 class ShareService {
+  // エクスポート形式は英語で統一（世界中のユーザーで互換性が保たれる）
   static String encode(BingoList list) {
     final words = list.items.map((i) => i.word).join(', ');
-    return '[ビンゴリスト]\n'
-        '名前: ${list.name}\n'
-        '概要: ${list.description}\n'
-        'フリーマス: ${list.hasFreeSpace ? 'あり' : 'なし'}\n'
+    return '[BingoList]\n'
+        'name: ${list.name}\n'
+        'description: ${list.description}\n'
+        'freeSpace: ${list.hasFreeSpace ? 'yes' : 'no'}\n'
         '\n'
         '$words';
   }
 
   static BingoList? decode(String text, String newId) {
-    if (!text.contains('[ビンゴリスト]')) return null;
+    // 英語形式（新）と日本語形式（旧）の両方に対応
+    final hasHeader = text.contains('[BingoList]') || text.contains('[ビンゴリスト]');
+    if (!hasHeader) return null;
+
     final lines = text.split('\n');
     String name = '';
     String description = '';
@@ -23,14 +26,22 @@ class ShareService {
 
     bool pastHeader = false;
     for (final line in lines) {
-      if (line.startsWith('名前:')) {
+      // 英語キー
+      if (line.startsWith('name:')) {
+        name = line.substring(5).trim();
+      } else if (line.startsWith('description:')) {
+        description = line.substring(12).trim();
+      } else if (line.startsWith('freeSpace:')) {
+        hasFreeSpace = line.contains('yes');
+      // 旧日本語キー（後方互換）
+      } else if (line.startsWith('名前:')) {
         name = line.substring(3).trim();
       } else if (line.startsWith('概要:')) {
         description = line.substring(3).trim();
       } else if (line.startsWith('フリーマス:')) {
         hasFreeSpace = line.contains('あり');
       } else if (pastHeader || (line.trim().isEmpty && name.isNotEmpty)) {
-        pastHeader = true; // 空行でもフラグを立てて、以降の単語行を正しく処理する
+        pastHeader = true;
         if (line.trim().isNotEmpty) {
           words.addAll(
               line.split(',').map((w) => w.trim()).where((w) => w.isNotEmpty));
@@ -51,14 +62,5 @@ class ShareService {
           .toList(),
       hasFreeSpace: hasFreeSpace,
     );
-  }
-
-  static Future<void> copyToClipboard(String text) async {
-    await Clipboard.setData(ClipboardData(text: text));
-  }
-
-  static Future<String?> pasteFromClipboard() async {
-    final data = await Clipboard.getData(Clipboard.kTextPlain);
-    return data?.text;
   }
 }

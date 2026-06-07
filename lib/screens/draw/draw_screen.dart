@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/bingo_list.dart';
 import '../../providers/draw_provider.dart';
 import '../../providers/list_provider.dart';
@@ -20,17 +21,18 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final listsAsync = ref.watch(bingoListsProvider);
     final session = ref.watch(drawProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('抽選'),
+        title: Text(l10n.drawTitle),
         actions: [
           if (session != null)
             IconButton(
               icon: const Icon(Icons.history),
-              tooltip: '履歴',
+              tooltip: l10n.drawHistory,
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const HistoryScreen()),
@@ -39,7 +41,7 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
           if (session != null)
             IconButton(
               icon: const Icon(Icons.stop_circle_outlined),
-              tooltip: '終了',
+              tooltip: l10n.drawStop,
               onPressed: () {
                 ref.read(drawProvider.notifier).reset();
               },
@@ -48,32 +50,32 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
       ),
       body: listsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('エラー: $e')),
+        error: (e, _) => Center(child: Text(l10n.listError(e.toString()))),
         data: (lists) {
           _selectedList ??= lists.isNotEmpty ? lists.first : null;
 
           if (session == null) {
-            return _buildSetup(lists);
+            return _buildSetup(lists, l10n);
           }
           return _buildDraw(session.lastDrawn, session.drawnItems.length,
-              session.remaining.length);
+              session.remaining.length, l10n);
         },
       ),
     );
   }
 
-  Widget _buildSetup(List<BingoList> lists) {
+  Widget _buildSetup(List<BingoList> lists, AppLocalizations l10n) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('リストを選択',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(l10n.drawListLabel,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 12),
           DropdownButtonFormField<BingoList>(
             initialValue: _selectedList,
-            decoration: const InputDecoration(border: OutlineInputBorder()),
+            decoration: const InputDecoration(),
             items: lists
                 .map((l) => DropdownMenuItem(value: l, child: Text(l.name)))
                 .toList(),
@@ -82,7 +84,7 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
           const Spacer(),
           FilledButton.icon(
             icon: const Icon(Icons.play_arrow),
-            label: const Text('抽選スタート'),
+            label: Text(l10n.drawStart),
             onPressed: _selectedList != null ? _start : null,
           ),
         ],
@@ -90,13 +92,13 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
     );
   }
 
-  Widget _buildDraw(String? lastDrawn, int drawn, int remaining) {
+  Widget _buildDraw(String? lastDrawn, int drawn, int remaining, AppLocalizations l10n) {
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(12),
           child: Text(
-            '残り $remaining 件 / 抽選済み $drawn 件',
+            l10n.drawRemaining(remaining, drawn),
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ),
@@ -104,14 +106,14 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
           child: Center(
             child: lastDrawn == null
                 ? Text(
-                    'ボタンを押して抽選開始',
+                    l10n.drawHint,
                     style: Theme.of(context).textTheme.titleMedium,
                   )
                 : Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '抽選結果',
+                        l10n.drawResult,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
@@ -148,8 +150,7 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.casino),
-              label:
-                  Text(remaining == 0 ? '全て抽選済み' : '次を引く（残り$remaining件）'),
+              label: Text(remaining == 0 ? l10n.drawAllDone : l10n.drawNext(remaining)),
               onPressed: (remaining == 0 || _drawing) ? null : _draw,
             ),
           ),
@@ -168,7 +169,6 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
 
   Future<void> _draw() async {
     setState(() => _drawing = true);
-    // 先に結果を確定させてからアニメーション表示
     ref.read(drawProvider.notifier).drawNext();
     final drawnItem = ref.read(drawProvider)?.lastDrawn;
     if (drawnItem != null && mounted) {
