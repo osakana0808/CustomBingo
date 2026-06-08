@@ -1,0 +1,68 @@
+{
+  "identifier" : "BingoMakerTest",
+  "nonConsumableProducts" : [
+    {
+      "displayPrice" : "600",
+      "familySharable" : false,
+      "internalID" : "bingo_maker_pro",
+      "localizations" : [
+        {
+          "description" : "抽選機能をアンロックして司会者モードをお楽しみください",
+          "displayName" : "ビンゴメーカー PRO",
+          "locale" : "ja_JP"
+        },
+        {
+          "description" : "Unlock the host mode with tombola draw animation",
+          "displayName" : "Bingo Maker PRO",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "bingo_maker_pro",
+      "referenceName" : "Bingo Maker PRO",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_locale" : "ja_JP",
+    "_storefront" : "JPN",
+    "_storeKitErrors" : [
+      {
+        "current" : "0",
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : "0",
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : "0",
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : "0",
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : "0",
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : "0",
+        "enabled" : false,
+        "name" : "App Transaction"
+      }
+    ]
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

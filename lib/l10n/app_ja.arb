@@ -107,5 +107,31 @@
   "presetAlphabetName": "アルファベット",
   "presetAlphabetDesc": "A〜Z",
   "presetMahjongName": "麻雀の役",
-  "presetMahjongDesc": "麻雀の役一覧"
+  "presetMahjongDesc": "麻雀の役一覧",
+
+  "paywallTitle": "司会者モード",
+  "paywallHeadline": "司会者モードを\nアンロック",
+  "paywallSubheadline": "ガラガラ抽選・履歴管理・全リスト対応。\nビンゴ司会をもっと楽しく、盛り上げよう。",
+  "paywallFeature1": "ガラガラ演出で抽選を盛り上げる",
+  "paywallFeature2": "抽選履歴をいつでも確認",
+  "paywallFeature3": "全リスト・プリセットに対応",
+  "paywallFeature4": "アニメーションのスキップ機能",
+  "paywallBuyButton": "{price} で購入",
+  "@paywallBuyButton": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+  "paywallBuyButtonNoPrice": "購入する",
+  "paywallRestore": "購入を復元",
+  "paywallLegal": "購入は Apple ID に請求されます。\nサブスクリプションは次の更新日の 24 時間前にキャンセルしない限り自動更新されます。",
+  "paywallPurchaseSuccess": "購入が完了しました！",
+  "paywallRestoreSuccess": "購入を復元しました！",
+  "paywallRestoreNotFound": "復元できる購入がありませんでした",
+  "paywallPurchaseError": "購入エラー: {error}",
+  "@paywallPurchaseError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "drawLocked": "司会者モードは有料機能です",
+  "drawLockedSub": "ガラガラ演出付きの抽選機能をアンロックしましょう",
+  "drawUnlock": "アンロックする"
 }

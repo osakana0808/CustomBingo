@@ -14,9 +14,7 @@ class ShareService {
   }
 
   static BingoList? decode(String text, String newId) {
-    // 英語形式（新）と日本語形式（旧）の両方に対応
-    final hasHeader = text.contains('[BingoList]') || text.contains('[ビンゴリスト]');
-    if (!hasHeader) return null;
+    if (!text.contains('[BingoList]')) return null;
 
     final lines = text.split('\n');
     String name = '';
@@ -26,20 +24,12 @@ class ShareService {
 
     bool pastHeader = false;
     for (final line in lines) {
-      // 英語キー
       if (line.startsWith('name:')) {
         name = line.substring(5).trim();
       } else if (line.startsWith('description:')) {
         description = line.substring(12).trim();
       } else if (line.startsWith('freeSpace:')) {
         hasFreeSpace = line.contains('yes');
-      // 旧日本語キー（後方互換）
-      } else if (line.startsWith('名前:')) {
-        name = line.substring(3).trim();
-      } else if (line.startsWith('概要:')) {
-        description = line.substring(3).trim();
-      } else if (line.startsWith('フリーマス:')) {
-        hasFreeSpace = line.contains('あり');
       } else if (pastHeader || (line.trim().isEmpty && name.isNotEmpty)) {
         pastHeader = true;
         if (line.trim().isNotEmpty) {

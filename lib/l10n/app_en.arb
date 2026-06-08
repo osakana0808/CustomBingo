@@ -74,5 +74,31 @@
   "presetAlphabetName": "Alphabet",
   "presetAlphabetDesc": "A–Z",
   "presetMahjongName": "Mahjong Hands",
-  "presetMahjongDesc": "List of mahjong winning hands"
+  "presetMahjongDesc": "List of mahjong winning hands",
+
+  "paywallTitle": "Host Mode",
+  "paywallHeadline": "Unlock\nHost Mode",
+  "paywallSubheadline": "Tombola draw, history & all lists.\nMake your bingo event unforgettable.",
+  "paywallFeature1": "Tombola drum animation for every draw",
+  "paywallFeature2": "View full draw history anytime",
+  "paywallFeature3": "Works with all lists & presets",
+  "paywallFeature4": "Skip animation with a tap",
+  "paywallBuyButton": "Buy for {price}",
+  "@paywallBuyButton": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+  "paywallBuyButtonNoPrice": "Buy Now",
+  "paywallRestore": "Restore Purchases",
+  "paywallLegal": "Payment will be charged to your Apple ID.\nSubscriptions auto-renew unless cancelled at least 24 hours before the end of the current period.",
+  "paywallPurchaseSuccess": "Purchase complete!",
+  "paywallRestoreSuccess": "Purchase restored!",
+  "paywallRestoreNotFound": "No purchases found to restore",
+  "paywallPurchaseError": "Purchase error: {error}",
+  "@paywallPurchaseError": {
+    "placeholders": { "error": { "type": "String" } }
+  },
+
+  "drawLocked": "Host Mode is a premium feature",
+  "drawLockedSub": "Unlock the tombola draw with animation",
+  "drawUnlock": "Unlock"
 }

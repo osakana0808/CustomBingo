@@ -224,4 +224,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get presetMahjongDesc => 'List of mahjong winning hands';
+
+  @override
+  String get paywallTitle => 'Host Mode';
+
+  @override
+  String get paywallHeadline => 'Unlock\nHost Mode';
+
+  @override
+  String get paywallSubheadline =>
+      'Tombola draw, history & all lists.\nMake your bingo event unforgettable.';
+
+  @override
+  String get paywallFeature1 => 'Tombola drum animation for every draw';
+
+  @override
+  String get paywallFeature2 => 'View full draw history anytime';
+
+  @override
+  String get paywallFeature3 => 'Works with all lists & presets';
+
+  @override
+  String get paywallFeature4 => 'Skip animation with a tap';
+
+  @override
+  String paywallBuyButton(String price) {
+    return 'Buy for $price';
+  }
+
+  @override
+  String get paywallBuyButtonNoPrice => 'Buy Now';
+
+  @override
+  String get paywallRestore => 'Restore Purchases';
+
+  @override
+  String get paywallLegal =>
+      'Payment will be charged to your Apple ID.\nSubscriptions auto-renew unless cancelled at least 24 hours before the end of the current period.';
+
+  @override
+  String get paywallPurchaseSuccess => 'Purchase complete!';
+
+  @override
+  String get paywallRestoreSuccess => 'Purchase restored!';
+
+  @override
+  String get paywallRestoreNotFound => 'No purchases found to restore';
+
+  @override
+  String paywallPurchaseError(String error) {
+    return 'Purchase error: $error';
+  }
+
+  @override
+  String get drawLocked => 'Host Mode is a premium feature';
+
+  @override
+  String get drawLockedSub => 'Unlock the tombola draw with animation';
+
+  @override
+  String get drawUnlock => 'Unlock';
 }

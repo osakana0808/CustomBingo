@@ -223,4 +223,63 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get presetMahjongDesc => '麻雀の役一覧';
+
+  @override
+  String get paywallTitle => '司会者モード';
+
+  @override
+  String get paywallHeadline => '司会者モードを\nアンロック';
+
+  @override
+  String get paywallSubheadline => 'ガラガラ抽選・履歴管理・全リスト対応。\nビンゴ司会をもっと楽しく、盛り上げよう。';
+
+  @override
+  String get paywallFeature1 => 'ガラガラ演出で抽選を盛り上げる';
+
+  @override
+  String get paywallFeature2 => '抽選履歴をいつでも確認';
+
+  @override
+  String get paywallFeature3 => '全リスト・プリセットに対応';
+
+  @override
+  String get paywallFeature4 => 'アニメーションのスキップ機能';
+
+  @override
+  String paywallBuyButton(String price) {
+    return '$price で購入';
+  }
+
+  @override
+  String get paywallBuyButtonNoPrice => '購入する';
+
+  @override
+  String get paywallRestore => '購入を復元';
+
+  @override
+  String get paywallLegal =>
+      '購入は Apple ID に請求されます。\nサブスクリプションは次の更新日の 24 時間前にキャンセルしない限り自動更新されます。';
+
+  @override
+  String get paywallPurchaseSuccess => '購入が完了しました！';
+
+  @override
+  String get paywallRestoreSuccess => '購入を復元しました！';
+
+  @override
+  String get paywallRestoreNotFound => '復元できる購入がありませんでした';
+
+  @override
+  String paywallPurchaseError(String error) {
+    return '購入エラー: $error';
+  }
+
+  @override
+  String get drawLocked => '司会者モードは有料機能です';
+
+  @override
+  String get drawLockedSub => 'ガラガラ演出付きの抽選機能をアンロックしましょう';
+
+  @override
+  String get drawUnlock => 'アンロックする';
 }

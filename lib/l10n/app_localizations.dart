@@ -493,6 +493,114 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'麻雀の役一覧'**
   String get presetMahjongDesc;
+
+  /// No description provided for @paywallTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'司会者モード'**
+  String get paywallTitle;
+
+  /// No description provided for @paywallHeadline.
+  ///
+  /// In ja, this message translates to:
+  /// **'司会者モードを\nアンロック'**
+  String get paywallHeadline;
+
+  /// No description provided for @paywallSubheadline.
+  ///
+  /// In ja, this message translates to:
+  /// **'ガラガラ抽選・履歴管理・全リスト対応。\nビンゴ司会をもっと楽しく、盛り上げよう。'**
+  String get paywallSubheadline;
+
+  /// No description provided for @paywallFeature1.
+  ///
+  /// In ja, this message translates to:
+  /// **'ガラガラ演出で抽選を盛り上げる'**
+  String get paywallFeature1;
+
+  /// No description provided for @paywallFeature2.
+  ///
+  /// In ja, this message translates to:
+  /// **'抽選履歴をいつでも確認'**
+  String get paywallFeature2;
+
+  /// No description provided for @paywallFeature3.
+  ///
+  /// In ja, this message translates to:
+  /// **'全リスト・プリセットに対応'**
+  String get paywallFeature3;
+
+  /// No description provided for @paywallFeature4.
+  ///
+  /// In ja, this message translates to:
+  /// **'アニメーションのスキップ機能'**
+  String get paywallFeature4;
+
+  /// No description provided for @paywallBuyButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'{price} で購入'**
+  String paywallBuyButton(String price);
+
+  /// No description provided for @paywallBuyButtonNoPrice.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入する'**
+  String get paywallBuyButtonNoPrice;
+
+  /// No description provided for @paywallRestore.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入を復元'**
+  String get paywallRestore;
+
+  /// No description provided for @paywallLegal.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入は Apple ID に請求されます。\nサブスクリプションは次の更新日の 24 時間前にキャンセルしない限り自動更新されます。'**
+  String get paywallLegal;
+
+  /// No description provided for @paywallPurchaseSuccess.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入が完了しました！'**
+  String get paywallPurchaseSuccess;
+
+  /// No description provided for @paywallRestoreSuccess.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入を復元しました！'**
+  String get paywallRestoreSuccess;
+
+  /// No description provided for @paywallRestoreNotFound.
+  ///
+  /// In ja, this message translates to:
+  /// **'復元できる購入がありませんでした'**
+  String get paywallRestoreNotFound;
+
+  /// No description provided for @paywallPurchaseError.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入エラー: {error}'**
+  String paywallPurchaseError(String error);
+
+  /// No description provided for @drawLocked.
+  ///
+  /// In ja, this message translates to:
+  /// **'司会者モードは有料機能です'**
+  String get drawLocked;
+
+  /// No description provided for @drawLockedSub.
+  ///
+  /// In ja, this message translates to:
+  /// **'ガラガラ演出付きの抽選機能をアンロックしましょう'**
+  String get drawLockedSub;
+
+  /// No description provided for @drawUnlock.
+  ///
+  /// In ja, this message translates to:
+  /// **'アンロックする'**
+  String get drawUnlock;
 }
 
 class _AppLocalizationsDelegate
