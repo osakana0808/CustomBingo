@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
@@ -12,10 +13,12 @@ class PurchaseService {
 
   // ── API キー ─────────────────────────────────────────────
   /// RevenueCat Android API キー（goog_xxx... の形式）
-  static const _androidApiKey = 'goog_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-
-  /// RevenueCat iOS API キー（appl_xxx... の形式）
-  static const _iosApiKey = 'appl_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+  // キーはビルド時に --dart-define で注入する
+  // flutter run --dart-define=RC_ANDROID_KEY=goog_xxx --dart-define=RC_IOS_KEY=appl_xxx
+  static const _androidApiKey =
+      String.fromEnvironment('RC_ANDROID_KEY', defaultValue: '');
+  static const _iosApiKey =
+      String.fromEnvironment('RC_IOS_KEY', defaultValue: '');
 
   // ── 商品・エンタイトルメント ID ───────────────────────────
   /// RevenueCat のエンタイトルメント ID
@@ -28,9 +31,7 @@ class PurchaseService {
 
   static Future<void> init() async {
     await Purchases.setLogLevel(kDebugMode ? LogLevel.debug : LogLevel.error);
-    // プラットフォームに応じて API キーを切り替える
-    const apiKey = String.fromEnvironment('REVENUECAT_API_KEY',
-        defaultValue: _androidApiKey); // CI/CD では env 注入も可
+    final apiKey = Platform.isIOS ? _iosApiKey : _androidApiKey;
     final config = PurchasesConfiguration(apiKey);
     await Purchases.configure(config);
   }
