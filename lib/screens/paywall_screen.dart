@@ -131,12 +131,12 @@ class PaywallScreen extends ConsumerWidget {
     );
   }
 
-  /// Offering から適切なパッケージを選ぶ（lifetime > monthly > annual の順）
+  /// Offering から適切なパッケージを選ぶ（monthly > annual > lifetime の順）
   Package? _pickPackage(Offering? offering) {
     if (offering == null) return null;
-    return offering.lifetime ??
-        offering.monthly ??
+    return offering.monthly ??
         offering.annual ??
+        offering.lifetime ??
         (offering.availablePackages.isNotEmpty
             ? offering.availablePackages.first
             : null);

@@ -1,27 +1,6 @@
 {
-  "identifier" : "BingoMakerTest",
-  "nonConsumableProducts" : [
-    {
-      "displayPrice" : "600",
-      "familySharable" : false,
-      "internalID" : "bingo_maker_pro",
-      "localizations" : [
-        {
-          "description" : "抽選機能をアンロックして司会者モードをお楽しみください",
-          "displayName" : "ビンゴメーカー PRO",
-          "locale" : "ja_JP"
-        },
-        {
-          "description" : "Unlock the host mode with tombola draw animation",
-          "displayName" : "Bingo Maker PRO",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "bingo_maker_pro",
-      "referenceName" : "Bingo Maker PRO",
-      "type" : "NonConsumable"
-    }
-  ],
+  "identifier" : "CustomBingoTest",
+  "nonConsumableProducts" : [],
   "settings" : {
     "_askToBuyEnabled" : false,
     "_billingGracePeriodEnabled" : false,
@@ -60,7 +39,48 @@
       }
     ]
   },
-  "subscriptionGroups" : [],
+  "subscriptionGroups" : [
+    {
+      "id" : "custom_bingo_pro_group",
+      "localizations" : [
+        {
+          "locale" : "ja_JP",
+          "name" : "Custom Bingo PRO"
+        },
+        {
+          "locale" : "en_US",
+          "name" : "Custom Bingo PRO"
+        }
+      ],
+      "subscriptions" : [
+        {
+          "adHocOfferCodeRedemptionEnabled" : false,
+          "displayPrice" : "200",
+          "familySharable" : false,
+          "groupNumber" : 1,
+          "internalID" : "custom_bingo_pro_monthly",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "司会者モードをアンロック。ガラガラ抽選・履歴管理が使えます。",
+              "displayName" : "Custom Bingo PRO（月額）",
+              "locale" : "ja_JP"
+            },
+            {
+              "description" : "Unlock host mode with tombola draw animation and history.",
+              "displayName" : "Custom Bingo PRO (Monthly)",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "custom_bingo_pro_monthly",
+          "referenceName" : "Custom Bingo PRO Monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "subscriptionGroupID" : "custom_bingo_pro_group",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
   "version" : {
     "major" : 3,
     "minor" : 0

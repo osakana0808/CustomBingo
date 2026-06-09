@@ -2,27 +2,36 @@ import 'package:flutter/foundation.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 /// RevenueCat のラッパー。
-/// ▶ Apple Developer 登録後に [_apiKey] を差し替えること。
-/// ▶ App Store Connect で product ID [kProProductId]、
-///   entitlement ID [kEntitlementId] を作成して RevenueCat と紐付けること。
+///
+/// ▶ [_androidApiKey] は RevenueCat ダッシュボードの Android Public API Key に差し替える。
+/// ▶ [_iosApiKey]     は Apple Developer 登録後に iOS Public API Key に差し替える。
+/// ▶ Google Play Console / App Store Connect で [kMonthlyProductId] を登録し、
+///   RevenueCat で [kEntitlementId] と紐付けること。
 class PurchaseService {
   PurchaseService._();
 
-  // ── 定数（Apple Developer 登録後に変更） ──────────────────
+  // ── API キー ─────────────────────────────────────────────
+  /// RevenueCat Android API キー（goog_xxx... の形式）
+  static const _androidApiKey = 'goog_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+
   /// RevenueCat iOS API キー（appl_xxx... の形式）
-  static const _apiKey = 'appl_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+  static const _iosApiKey = 'appl_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 
+  // ── 商品・エンタイトルメント ID ───────────────────────────
   /// RevenueCat のエンタイトルメント ID
-  static const kEntitlementId = 'host_mode';
+  static const kEntitlementId = 'custom_bingo_host_mode';
 
-  /// App Store Connect で登録する In-App Purchase の Product ID
-  static const kProProductId = 'bingo_maker_pro';
+  /// Google Play / App Store Connect に登録するサブスク Product ID（月額）
+  static const kMonthlyProductId = 'custom_bingo_pro_monthly';
 
   // ─────────────────────────────────────────────────────────
 
   static Future<void> init() async {
     await Purchases.setLogLevel(kDebugMode ? LogLevel.debug : LogLevel.error);
-    final config = PurchasesConfiguration(_apiKey);
+    // プラットフォームに応じて API キーを切り替える
+    const apiKey = String.fromEnvironment('REVENUECAT_API_KEY',
+        defaultValue: _androidApiKey); // CI/CD では env 注入も可
+    final config = PurchasesConfiguration(apiKey);
     await Purchases.configure(config);
   }
 
