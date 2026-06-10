@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../app.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_list.dart';
+import '../../models/draw_session.dart';
 import '../../models/lottery_skin.dart';
 import '../../providers/draw_provider.dart';
 import '../../providers/list_provider.dart';
@@ -59,30 +60,60 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
             IconButton(
               icon: const Icon(Icons.stop_circle_outlined),
               tooltip: l10n.drawStop,
-              onPressed: () {
-                ref.read(drawProvider.notifier).reset();
-                setState(() => _displayedResult = null);
-              },
+              onPressed: () => _confirmStop(l10n),
             ),
         ],
       ),
-      body: listsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(l10n.listError(e.toString()))),
-        data: (lists) {
-          _selectedList ??= lists.isNotEmpty ? lists.first : null;
+      body: _buildBody(listsAsync, session, l10n),
+    );
+  }
 
-          if (session == null) {
-            return _buildSetup(lists, l10n);
-          }
-          return _buildDraw(
-            _displayedResult,
-            session.drawnItems.length,
-            session.remaining.length,
-            l10n,
-          );
-        },
+  // 終了すると抽選履歴が失われ復帰できないため、終了前に確認する
+  Future<void> _confirmStop(AppLocalizations l10n) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.drawStopConfirmTitle),
+        content: Text(l10n.drawStopConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.drawStopCancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l10n.drawStopConfirm),
+          ),
+        ],
       ),
+    );
+    if (confirmed == true && mounted) {
+      ref.read(drawProvider.notifier).reset();
+      setState(() => _displayedResult = null);
+    }
+  }
+
+  Widget _buildBody(
+    AsyncValue<List<BingoList>> listsAsync,
+    DrawSession? session,
+    AppLocalizations l10n,
+  ) {
+    return listsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text(l10n.listError(e.toString()))),
+      data: (lists) {
+        _selectedList ??= lists.isNotEmpty ? lists.first : null;
+
+        if (session == null) {
+          return _buildSetup(lists, l10n);
+        }
+        return _buildDraw(
+          _displayedResult,
+          session.drawnItems.length,
+          session.remaining.length,
+          l10n,
+        );
+      },
     );
   }
 
@@ -94,8 +125,10 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(l10n.drawListLabel,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(
+            l10n.drawListLabel,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
           const SizedBox(height: 12),
           DropdownButtonFormField<BingoList>(
             initialValue: _selectedList,
@@ -108,8 +141,10 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
           const SizedBox(height: 32),
 
           // ─── スキン選択 ──────────────────────────────────────
-          Text(l10n.drawSkinLabel,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(
+            l10n.drawSkinLabel,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
           const SizedBox(height: 12),
           Row(
             children: LotterySkin.values.map((skin) {
@@ -177,7 +212,11 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
   }
 
   Widget _buildDraw(
-      String? displayedResult, int drawn, int remaining, AppLocalizations l10n) {
+    String? displayedResult,
+    int drawn,
+    int remaining,
+    AppLocalizations l10n,
+  ) {
     return Column(
       children: [
         Padding(
@@ -200,19 +239,16 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
                       Text(
                         l10n.drawResult,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.6),
-                            ),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         displayedResult,
                         key: ValueKey(displayedResult),
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayLarge
+                        style: Theme.of(context).textTheme.displayLarge
                             ?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.primary,
@@ -237,7 +273,8 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
                     )
                   : const Icon(Icons.casino),
               label: Text(
-                  remaining == 0 ? l10n.drawAllDone : l10n.drawNext(remaining)),
+                remaining == 0 ? l10n.drawAllDone : l10n.drawNext(remaining),
+              ),
               onPressed: (remaining == 0 || _drawing) ? null : _draw,
             ),
           ),
@@ -266,8 +303,11 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
                     width: 1.5,
                   ),
                 ),
-                child:
-                    const Icon(Icons.lock_outline, size: 44, color: WaColors.gold),
+                child: const Icon(
+                  Icons.lock_outline,
+                  size: 44,
+                  color: WaColors.gold,
+                ),
               ),
               const SizedBox(height: 24),
               Text(
@@ -283,7 +323,10 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
               Text(
                 l10n.drawLockedSub,
                 style: const TextStyle(
-                    color: WaColors.creamDim, fontSize: 14, height: 1.5),
+                  color: WaColors.creamDim,
+                  fontSize: 14,
+                  height: 1.5,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -338,11 +381,8 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
       context: context,
       barrierDismissible: false,
       barrierColor: Colors.transparent,
-      pageBuilder: (_, __, ___) => LotteryAnimationWidget(
-        item: item,
-        onComplete: nav.pop,
-        skin: skin,
-      ),
+      pageBuilder: (_, __, ___) =>
+          LotteryAnimationWidget(item: item, onComplete: nav.pop, skin: skin),
     );
   }
 }

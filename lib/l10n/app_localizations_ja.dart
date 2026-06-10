@@ -293,6 +293,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get drawUnlock => 'アンロックする';
 
   @override
+  String get drawStopConfirmTitle => '抽選を終了しますか？';
+
+  @override
+  String get drawStopConfirmMessage => '終了すると、抽選の履歴はすべて失われます。';
+
+  @override
+  String get drawStopConfirm => '終了';
+
+  @override
+  String get drawStopCancel => 'キャンセル';
+
+  @override
   String get cardPlayExitTitle => 'カードを閉じますか？';
 
   @override

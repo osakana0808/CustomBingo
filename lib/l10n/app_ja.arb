@@ -138,6 +138,11 @@
   "drawLockedSub": "ガラガラ演出付きの抽選機能をアンロックしましょう",
   "drawUnlock": "アンロックする",
 
+  "drawStopConfirmTitle": "抽選を終了しますか？",
+  "drawStopConfirmMessage": "終了すると、抽選の履歴はすべて失われます。",
+  "drawStopConfirm": "終了",
+  "drawStopCancel": "キャンセル",
+
   "cardPlayExitTitle": "カードを閉じますか？",
   "cardPlayExitMessage": "ゲームの途中です。閉じると、このカードには戻れません。",
   "cardPlayExitConfirm": "閉じる",

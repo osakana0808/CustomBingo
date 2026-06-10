@@ -295,6 +295,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drawUnlock => 'Unlock';
 
   @override
+  String get drawStopConfirmTitle => 'End this draw session?';
+
+  @override
+  String get drawStopConfirmMessage =>
+      'Ending the session will erase the entire draw history.';
+
+  @override
+  String get drawStopConfirm => 'End';
+
+  @override
+  String get drawStopCancel => 'Cancel';
+
+  @override
   String get cardPlayExitTitle => 'Close this card?';
 
   @override

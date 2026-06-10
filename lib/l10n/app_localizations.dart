@@ -620,6 +620,30 @@ abstract class AppLocalizations {
   /// **'アンロックする'**
   String get drawUnlock;
 
+  /// No description provided for @drawStopConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'抽選を終了しますか？'**
+  String get drawStopConfirmTitle;
+
+  /// No description provided for @drawStopConfirmMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'終了すると、抽選の履歴はすべて失われます。'**
+  String get drawStopConfirmMessage;
+
+  /// No description provided for @drawStopConfirm.
+  ///
+  /// In ja, this message translates to:
+  /// **'終了'**
+  String get drawStopConfirm;
+
+  /// No description provided for @drawStopCancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get drawStopCancel;
+
   /// No description provided for @cardPlayExitTitle.
   ///
   /// In ja, this message translates to:

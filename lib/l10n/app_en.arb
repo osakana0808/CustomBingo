@@ -105,6 +105,11 @@
   "drawLockedSub": "Unlock the tombola draw with animation",
   "drawUnlock": "Unlock",
 
+  "drawStopConfirmTitle": "End this draw session?",
+  "drawStopConfirmMessage": "Ending the session will erase the entire draw history.",
+  "drawStopConfirm": "End",
+  "drawStopCancel": "Cancel",
+
   "cardPlayExitTitle": "Close this card?",
   "cardPlayExitMessage": "The game is still in progress. Once you close it, you can't get this card back.",
   "cardPlayExitConfirm": "Close",
