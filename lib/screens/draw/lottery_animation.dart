@@ -2,16 +2,19 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../l10n/app_localizations.dart';
+import '../../models/lottery_skin.dart';
 
 class LotteryAnimationWidget extends StatefulWidget {
   const LotteryAnimationWidget({
     super.key,
     required this.item,
     required this.onComplete,
+    this.skin = LotterySkin.wooden,
   });
 
   final String item;
   final VoidCallback onComplete;
+  final LotterySkin skin;
 
   @override
   State<LotteryAnimationWidget> createState() => _LotteryAnimationWidgetState();
@@ -153,7 +156,7 @@ class _LotteryAnimationWidgetState extends State<LotteryAnimationWidget>
                     child: Transform.rotate(
                       angle: _drumRotation.value,
                       child: SvgPicture.asset(
-                        'assets/images/lottery_drum_wheel.svg',
+                        widget.skin.assetPath,
                         width: drumSize,
                         height: drumSize,
                       ),
@@ -173,17 +176,13 @@ class _LotteryAnimationWidgetState extends State<LotteryAnimationWidget>
                         height: 44,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: const RadialGradient(
-                            center: Alignment(-0.3, -0.3),
-                            colors: [
-                              Colors.white,
-                              Color(0xFFFFD54F),
-                              Color(0xFFF57C00),
-                            ],
+                          gradient: RadialGradient(
+                            center: const Alignment(-0.3, -0.3),
+                            colors: widget.skin.ballColors,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.orange.withValues(alpha: 0.6),
+                              color: widget.skin.ballGlow.withValues(alpha: 0.6),
                               blurRadius: 14,
                               spreadRadius: 2,
                             ),
@@ -209,11 +208,17 @@ class _LotteryAnimationWidgetState extends State<LotteryAnimationWidget>
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 36, vertical: 22),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: widget.skin.cardColor,
                               borderRadius: BorderRadius.circular(28),
+                              border: widget.skin == LotterySkin.casino
+                                  ? Border.all(
+                                      color: const Color(0xFFD4AF37),
+                                      width: 2,
+                                    )
+                                  : null,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.amber.withValues(alpha: 0.5),
+                                  color: widget.skin.cardGlow.withValues(alpha: 0.5),
                                   blurRadius: 30,
                                   spreadRadius: 6,
                                 ),
@@ -221,10 +226,10 @@ class _LotteryAnimationWidgetState extends State<LotteryAnimationWidget>
                             ),
                             child: Text(
                               widget.item,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 60,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF4A148C),
+                                color: widget.skin.cardTextColor,
                                 height: 1.1,
                               ),
                               textAlign: TextAlign.center,

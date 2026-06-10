@@ -193,6 +193,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get drawSkip => 'タップでスキップ';
 
   @override
+  String get drawSkinLabel => 'ガラガラのスキン';
+
+  @override
+  String get drawSkinWooden => '木製';
+
+  @override
+  String get drawSkinCasino => 'カジノ';
+
+  @override
   String historyTitle(int count) {
     return '抽選履歴（$count件）';
   }

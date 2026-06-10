@@ -194,6 +194,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drawSkip => 'Tap to skip';
 
   @override
+  String get drawSkinLabel => 'Drum Skin';
+
+  @override
+  String get drawSkinWooden => 'Wooden';
+
+  @override
+  String get drawSkinCasino => 'Casino';
+
+  @override
   String historyTitle(int count) {
     return 'History ($count)';
   }

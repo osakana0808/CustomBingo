@@ -434,6 +434,24 @@ abstract class AppLocalizations {
   /// **'タップでスキップ'**
   String get drawSkip;
 
+  /// No description provided for @drawSkinLabel.
+  ///
+  /// In ja, this message translates to:
+  /// **'ガラガラのスキン'**
+  String get drawSkinLabel;
+
+  /// No description provided for @drawSkinWooden.
+  ///
+  /// In ja, this message translates to:
+  /// **'木製'**
+  String get drawSkinWooden;
+
+  /// No description provided for @drawSkinCasino.
+  ///
+  /// In ja, this message translates to:
+  /// **'カジノ'**
+  String get drawSkinCasino;
+
   /// No description provided for @historyTitle.
   ///
   /// In ja, this message translates to:

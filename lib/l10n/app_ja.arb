@@ -93,6 +93,9 @@
     "placeholders": { "remaining": { "type": "int" } }
   },
   "drawSkip": "タップでスキップ",
+  "drawSkinLabel": "ガラガラのスキン",
+  "drawSkinWooden": "木製",
+  "drawSkinCasino": "カジノ",
 
   "historyTitle": "抽選履歴（{count}件）",
   "@historyTitle": {

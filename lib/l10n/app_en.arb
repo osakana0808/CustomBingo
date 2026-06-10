@@ -63,6 +63,9 @@
   "drawAllDone": "All drawn",
   "drawNext": "Draw next ({remaining} left)",
   "drawSkip": "Tap to skip",
+  "drawSkinLabel": "Drum Skin",
+  "drawSkinWooden": "Wooden",
+  "drawSkinCasino": "Casino",
 
   "historyTitle": "History ({count})",
   "historyEmpty": "No draws yet",
