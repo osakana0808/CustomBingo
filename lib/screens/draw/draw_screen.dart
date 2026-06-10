@@ -32,7 +32,10 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
     final l10n = AppLocalizations.of(context);
     final entitlementAsync = ref.watch(entitlementProvider);
 
-    if (entitlementAsync.valueOrNull == false) {
+    if (entitlementAsync.isLoading && !entitlementAsync.hasValue) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    if (entitlementAsync.valueOrNull != true) {
       return _buildLockedScreen(context, l10n);
     }
 

@@ -5,7 +5,22 @@ import '../services/purchase_service.dart';
 // ── エンタイトルメント（購入済みか否か） ──────────────────────
 class EntitlementNotifier extends AsyncNotifier<bool> {
   @override
-  Future<bool> build() => PurchaseService.isEntitled();
+  Future<bool> build() {
+    // 解約・期限切れ・別端末での購入を即時反映する。
+    // SDK はフォアグラウンド復帰時などにサーバーから CustomerInfo を再取得し、
+    // 変化があるとこのリスナーが呼ばれる。
+    void onInfoUpdate(CustomerInfo info) {
+      state = AsyncData(
+        info.entitlements.active.containsKey(PurchaseService.kEntitlementId),
+      );
+    }
+
+    Purchases.addCustomerInfoUpdateListener(onInfoUpdate);
+    ref.onDispose(
+      () => Purchases.removeCustomerInfoUpdateListener(onInfoUpdate),
+    );
+    return PurchaseService.isEntitled();
+  }
 
   Future<void> refresh() async {
     state = const AsyncLoading();
