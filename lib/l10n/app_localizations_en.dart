@@ -293,4 +293,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get drawUnlock => 'Unlock';
+
+  @override
+  String get menuPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get menuTerms => 'Terms of Service';
+
+  @override
+  String get menuAbout => 'About This App';
+
+  @override
+  String get menuLinkError => 'Could not open the page';
+
+  @override
+  String get appName => 'Custom Bingo';
 }

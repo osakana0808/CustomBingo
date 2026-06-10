@@ -103,5 +103,11 @@
 
   "drawLocked": "Host Mode is a premium feature",
   "drawLockedSub": "Unlock the tombola draw with animation",
-  "drawUnlock": "Unlock"
+  "drawUnlock": "Unlock",
+
+  "menuPrivacyPolicy": "Privacy Policy",
+  "menuTerms": "Terms of Service",
+  "menuAbout": "About This App",
+  "menuLinkError": "Could not open the page",
+  "appName": "Custom Bingo"
 }

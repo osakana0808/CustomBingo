@@ -136,5 +136,11 @@
 
   "drawLocked": "司会者モードは有料機能です",
   "drawLockedSub": "ガラガラ演出付きの抽選機能をアンロックしましょう",
-  "drawUnlock": "アンロックする"
+  "drawUnlock": "アンロックする",
+
+  "menuPrivacyPolicy": "プライバシーポリシー",
+  "menuTerms": "利用規約",
+  "menuAbout": "アプリについて",
+  "menuLinkError": "ページを開けませんでした",
+  "appName": "カスタムビンゴ"
 }

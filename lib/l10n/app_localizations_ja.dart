@@ -291,4 +291,19 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get drawUnlock => 'アンロックする';
+
+  @override
+  String get menuPrivacyPolicy => 'プライバシーポリシー';
+
+  @override
+  String get menuTerms => '利用規約';
+
+  @override
+  String get menuAbout => 'アプリについて';
+
+  @override
+  String get menuLinkError => 'ページを開けませんでした';
+
+  @override
+  String get appName => 'カスタムビンゴ';
 }

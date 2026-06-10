@@ -619,6 +619,36 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'アンロックする'**
   String get drawUnlock;
+
+  /// No description provided for @menuPrivacyPolicy.
+  ///
+  /// In ja, this message translates to:
+  /// **'プライバシーポリシー'**
+  String get menuPrivacyPolicy;
+
+  /// No description provided for @menuTerms.
+  ///
+  /// In ja, this message translates to:
+  /// **'利用規約'**
+  String get menuTerms;
+
+  /// No description provided for @menuAbout.
+  ///
+  /// In ja, this message translates to:
+  /// **'アプリについて'**
+  String get menuAbout;
+
+  /// No description provided for @menuLinkError.
+  ///
+  /// In ja, this message translates to:
+  /// **'ページを開けませんでした'**
+  String get menuLinkError;
+
+  /// No description provided for @appName.
+  ///
+  /// In ja, this message translates to:
+  /// **'カスタムビンゴ'**
+  String get appName;
 }
 
 class _AppLocalizationsDelegate

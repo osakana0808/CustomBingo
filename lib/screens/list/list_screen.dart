@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_list.dart';
 import '../../providers/list_provider.dart';
@@ -28,6 +30,23 @@ class ListScreen extends ConsumerWidget {
               MaterialPageRoute(builder: (_) => const ImportScreen()),
             ).then((_) => ref.read(bingoListsProvider.notifier).reload()),
           ),
+          PopupMenuButton<_MenuAction>(
+            onSelected: (action) => _onMenuSelected(context, action, l10n),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: _MenuAction.privacy,
+                child: Text(l10n.menuPrivacyPolicy),
+              ),
+              PopupMenuItem(
+                value: _MenuAction.terms,
+                child: Text(l10n.menuTerms),
+              ),
+              PopupMenuItem(
+                value: _MenuAction.about,
+                child: Text(l10n.menuAbout),
+              ),
+            ],
+          ),
         ],
       ),
       body: listsAsync.when(
@@ -54,6 +73,39 @@ class ListScreen extends ConsumerWidget {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  static const _siteBase = 'https://osakana0808.github.io/CustomBingo';
+
+  Future<void> _onMenuSelected(
+      BuildContext context, _MenuAction action, AppLocalizations l10n) async {
+    switch (action) {
+      case _MenuAction.privacy:
+        await _openPage(context, 'privacy.html', l10n);
+      case _MenuAction.terms:
+        await _openPage(context, 'terms.html', l10n);
+      case _MenuAction.about:
+        final info = await PackageInfo.fromPlatform();
+        if (!context.mounted) return;
+        showAboutDialog(
+          context: context,
+          applicationName: l10n.appName,
+          applicationVersion: info.version,
+          applicationLegalese: '© 2026 muraemon',
+        );
+    }
+  }
+
+  Future<void> _openPage(
+      BuildContext context, String page, AppLocalizations l10n) async {
+    final isJa = Localizations.localeOf(context).languageCode == 'ja';
+    final url = Uri.parse(isJa ? '$_siteBase/$page' : '$_siteBase/en/$page');
+    final ok = await launchUrl(url, mode: LaunchMode.externalApplication);
+    if (!ok && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.menuLinkError)),
+      );
+    }
   }
 
   void _openEdit(BuildContext context, WidgetRef ref, BingoList? list) {
@@ -98,6 +150,8 @@ class ListScreen extends ConsumerWidget {
   }
 }
 
+
+enum _MenuAction { privacy, terms, about }
 
 class _ListTile extends StatelessWidget {
   final BingoList list;
