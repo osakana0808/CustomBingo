@@ -80,7 +80,7 @@ class ListService {
 
   Future<void> delete(String id) async {
     final db = await DatabaseService.database;
-    await db.delete('bingo_lists', where: 'id = ? AND is_preset = 0', whereArgs: [id]);
+    await db.delete('bingo_lists', where: 'id = ?', whereArgs: [id]);
   }
 
   BingoItem newItem(String word, {String? column}) =>

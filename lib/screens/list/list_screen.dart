@@ -37,25 +37,15 @@ class ListScreen extends ConsumerWidget {
           if (lists.isEmpty) {
             return Center(child: Text(l10n.listEmpty));
           }
-          final presets = lists.where((l) => l.isPreset).toList();
-          final custom = lists.where((l) => !l.isPreset).toList();
           return ListView(
-            children: [
-              if (custom.isNotEmpty) ...[
-                _SectionHeader(l10n.listSectionMy),
-                ...custom.map((list) => _ListTile(
+            children: lists
+                .map((list) => _ListTile(
                       list: list,
                       onTap: () => _openEdit(context, ref, list),
                       onShare: () => _share(context, list, l10n),
                       onDelete: () => _confirmDelete(context, ref, list, l10n),
-                    )),
-              ],
-              _SectionHeader(l10n.listSectionPreset),
-              ...presets.map((list) => _ListTile(
-                    list: list,
-                    onShare: () => _share(context, list, l10n),
-                  )),
-            ],
+                    ))
+                .toList(),
           );
         },
       ),
@@ -108,38 +98,6 @@ class ListScreen extends ConsumerWidget {
   }
 }
 
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  const _SectionHeader(this.title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-      child: Row(
-        children: [
-          Container(
-            width: 3,
-            height: 14,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.secondary,
-                  letterSpacing: 1.5,
-                  fontSize: 12,
-                ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _ListTile extends StatelessWidget {
   final BingoList list;
@@ -154,36 +112,11 @@ class _ListTile extends StatelessWidget {
     this.onDelete,
   });
 
-  // プリセットは言語設定に応じてローカライズされた名前を表示
-  String _displayName(BuildContext context) {
-    if (!list.isPreset) return list.name;
-    final l10n = AppLocalizations.of(context);
-    switch (list.id) {
-      case 'preset_numbers':  return l10n.presetNumberName;
-      case 'preset_hiragana': return l10n.presetHiraganaName;
-      case 'preset_alphabet': return l10n.presetAlphabetName;
-      case 'preset_mahjong':  return l10n.presetMahjongName;
-      default: return list.name;
-    }
-  }
-
-  String _displayDesc(BuildContext context) {
-    if (!list.isPreset) return list.description;
-    final l10n = AppLocalizations.of(context);
-    switch (list.id) {
-      case 'preset_numbers':  return l10n.presetNumberDesc;
-      case 'preset_hiragana': return l10n.presetHiraganaDesc;
-      case 'preset_alphabet': return l10n.presetAlphabetDesc;
-      case 'preset_mahjong':  return l10n.presetMahjongDesc;
-      default: return list.description;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context);
-    final desc = _displayDesc(context);
+    final desc = list.description;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Material(
@@ -201,7 +134,7 @@ class _ListTile extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  list.isPreset ? Icons.star_outline : Icons.list_alt,
+                  Icons.list_alt,
                   color: cs.secondary,
                   size: 22,
                 ),
@@ -211,7 +144,7 @@ class _ListTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _displayName(context),
+                        list.name,
                         style: TextStyle(
                           color: cs.onSurface,
                           fontWeight: FontWeight.w600,
