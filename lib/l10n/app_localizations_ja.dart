@@ -293,6 +293,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get drawUnlock => 'アンロックする';
 
   @override
+  String get cardPlayExitTitle => 'カードを閉じますか？';
+
+  @override
+  String get cardPlayExitMessage => 'ゲームの途中です。閉じると、このカードには戻れません。';
+
+  @override
+  String get cardPlayExitConfirm => '閉じる';
+
+  @override
+  String get cardPlayExitCancel => 'キャンセル';
+
+  @override
   String get menuPrivacyPolicy => 'プライバシーポリシー';
 
   @override

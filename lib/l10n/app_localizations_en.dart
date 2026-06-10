@@ -295,6 +295,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drawUnlock => 'Unlock';
 
   @override
+  String get cardPlayExitTitle => 'Close this card?';
+
+  @override
+  String get cardPlayExitMessage =>
+      'The game is still in progress. Once you close it, you can\'t get this card back.';
+
+  @override
+  String get cardPlayExitConfirm => 'Close';
+
+  @override
+  String get cardPlayExitCancel => 'Cancel';
+
+  @override
   String get menuPrivacyPolicy => 'Privacy Policy';
 
   @override

@@ -16,58 +16,94 @@ class CardPlayScreen extends ConsumerWidget {
       return Scaffold(body: Center(child: Text(l10n.cardPlayEmpty)));
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.cardPlayTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: l10n.cardPlayReset,
-            onPressed: () {
-              var updated = card;
-              for (int r = 0; r < card.size; r++) {
-                for (int c = 0; c < card.size; c++) {
-                  final cell = card.cells[r][c];
-                  if (!cell.isFree && cell.isMarked) {
-                    updated = updated.markCell(r, c);
+    // ゲーム進行中（マークあり）は、誤って閉じて二度と同じカードに
+    // 戻れなくなるのを防ぐため、閉じる前に確認する
+    final hasProgress = card.cells.any(
+      (row) => row.any((c) => c.isMarked && !c.isFree),
+    );
+
+    return PopScope(
+      canPop: !hasProgress,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final confirmed = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(l10n.cardPlayExitTitle),
+            content: Text(l10n.cardPlayExitMessage),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(l10n.cardPlayExitCancel),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: Text(l10n.cardPlayExitConfirm),
+              ),
+            ],
+          ),
+        );
+        if (confirmed == true && context.mounted) {
+          Navigator.pop(context);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.cardPlayTitle),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: l10n.cardPlayReset,
+              onPressed: () {
+                var updated = card;
+                for (int r = 0; r < card.size; r++) {
+                  for (int c = 0; c < card.size; c++) {
+                    final cell = card.cells[r][c];
+                    if (!cell.isFree && cell.isMarked) {
+                      updated = updated.markCell(r, c);
+                    }
                   }
                 }
-              }
-              ref.read(cardProvider.notifier).setCard(updated);
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          if (card.hasBingo)
-            Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF7A1020), Color(0xFFCC3333), Color(0xFF7A1020)],
+                ref.read(cardProvider.notifier).setCard(updated);
+              },
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            if (card.hasBingo)
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF7A1020),
+                      Color(0xFFCC3333),
+                      Color(0xFF7A1020),
+                    ],
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Text(
+                  l10n.cardPlayBingo,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFF0D060),
+                    letterSpacing: 4,
+                  ),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              child: Text(
-                l10n.cardPlayBingo,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFF0D060),
-                  letterSpacing: 4,
-                ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: _BingoGrid(card: card),
               ),
             ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: _BingoGrid(card: card),
-            ),
-          ),
-          const SafeArea(top: false, child: AdBanner()),
-        ],
+            const SafeArea(top: false, child: AdBanner()),
+          ],
+        ),
       ),
     );
   }
@@ -138,9 +174,12 @@ class _BingoCell extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: borderColor, width: isMarked ? 1.5 : 1),
           boxShadow: isMarked
-              ? [BoxShadow(
-                  color: const Color(0xFFCC3333).withValues(alpha: 0.3),
-                  blurRadius: 6)]
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFFCC3333).withValues(alpha: 0.3),
+                    blurRadius: 6,
+                  ),
+                ]
               : null,
         ),
         child: Center(
@@ -153,7 +192,9 @@ class _BingoCell extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: textColor,
-                  fontWeight: (isMarked || isFree) ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: (isMarked || isFree)
+                      ? FontWeight.bold
+                      : FontWeight.normal,
                   fontSize: 14,
                 ),
               ),

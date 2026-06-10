@@ -620,6 +620,30 @@ abstract class AppLocalizations {
   /// **'アンロックする'**
   String get drawUnlock;
 
+  /// No description provided for @cardPlayExitTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'カードを閉じますか？'**
+  String get cardPlayExitTitle;
+
+  /// No description provided for @cardPlayExitMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'ゲームの途中です。閉じると、このカードには戻れません。'**
+  String get cardPlayExitMessage;
+
+  /// No description provided for @cardPlayExitConfirm.
+  ///
+  /// In ja, this message translates to:
+  /// **'閉じる'**
+  String get cardPlayExitConfirm;
+
+  /// No description provided for @cardPlayExitCancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get cardPlayExitCancel;
+
   /// No description provided for @menuPrivacyPolicy.
   ///
   /// In ja, this message translates to:

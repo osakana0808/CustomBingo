@@ -105,6 +105,11 @@
   "drawLockedSub": "Unlock the tombola draw with animation",
   "drawUnlock": "Unlock",
 
+  "cardPlayExitTitle": "Close this card?",
+  "cardPlayExitMessage": "The game is still in progress. Once you close it, you can't get this card back.",
+  "cardPlayExitConfirm": "Close",
+  "cardPlayExitCancel": "Cancel",
+
   "menuPrivacyPolicy": "Privacy Policy",
   "menuTerms": "Terms of Service",
   "menuAbout": "About This App",

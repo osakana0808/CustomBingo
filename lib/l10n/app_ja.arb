@@ -138,6 +138,11 @@
   "drawLockedSub": "ガラガラ演出付きの抽選機能をアンロックしましょう",
   "drawUnlock": "アンロックする",
 
+  "cardPlayExitTitle": "カードを閉じますか？",
+  "cardPlayExitMessage": "ゲームの途中です。閉じると、このカードには戻れません。",
+  "cardPlayExitConfirm": "閉じる",
+  "cardPlayExitCancel": "キャンセル",
+
   "menuPrivacyPolicy": "プライバシーポリシー",
   "menuTerms": "利用規約",
   "menuAbout": "アプリについて",
