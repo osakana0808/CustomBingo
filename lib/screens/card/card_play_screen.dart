@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_card.dart';
 import '../../providers/card_provider.dart';
+import '../../widgets/ad_banner.dart';
 
 class CardPlayScreen extends ConsumerWidget {
   const CardPlayScreen({super.key});
@@ -65,6 +66,7 @@ class CardPlayScreen extends ConsumerWidget {
               child: _BingoGrid(card: card),
             ),
           ),
+          const AdBanner(),
         ],
       ),
     );
