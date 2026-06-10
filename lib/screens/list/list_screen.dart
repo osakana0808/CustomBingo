@@ -22,14 +22,6 @@ class ListScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.listTitle),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.download),
-            tooltip: l10n.listImportTooltip,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ImportScreen()),
-            ).then((_) => ref.read(bingoListsProvider.notifier).reload()),
-          ),
           PopupMenuButton<_MenuAction>(
             onSelected: (action) => _onMenuSelected(context, action, l10n),
             itemBuilder: (_) => [
@@ -57,20 +49,40 @@ class ListScreen extends ConsumerWidget {
             return Center(child: Text(l10n.listEmpty));
           }
           return ListView(
-            children: lists
-                .map((list) => _ListTile(
-                      list: list,
-                      onTap: () => _openEdit(context, ref, list),
-                      onShare: () => _share(context, list, l10n),
-                      onDelete: () => _confirmDelete(context, ref, list, l10n),
-                    ))
-                .toList(),
+            children: [
+              ...lists.map((list) => _ListTile(
+                    list: list,
+                    onTap: () => _openEdit(context, ref, list),
+                    onShare: () => _share(context, list, l10n),
+                    onDelete: () => _confirmDelete(context, ref, list, l10n),
+                  )),
+              // フローティングボタンの後ろにリストが隠れないようにする
+              const SizedBox(height: 88),
+            ],
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openEdit(context, ref, null),
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            heroTag: 'fab-import',
+            tooltip: l10n.listImportTooltip,
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            foregroundColor: Theme.of(context).colorScheme.onSecondary,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ImportScreen()),
+            ).then((_) => ref.read(bingoListsProvider.notifier).reload()),
+            child: const Icon(Icons.download),
+          ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'fab-add',
+            onPressed: () => _openEdit(context, ref, null),
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
