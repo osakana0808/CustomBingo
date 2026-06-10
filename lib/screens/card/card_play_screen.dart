@@ -66,7 +66,7 @@ class CardPlayScreen extends ConsumerWidget {
               child: _BingoGrid(card: card),
             ),
           ),
-          const AdBanner(),
+          const SafeArea(top: false, child: AdBanner()),
         ],
       ),
     );

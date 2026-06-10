@@ -5,6 +5,7 @@ import 'l10n/app_localizations.dart';
 import 'screens/list/list_screen.dart';
 import 'screens/card/card_setup_screen.dart';
 import 'screens/draw/draw_screen.dart';
+import 'widgets/ad_banner.dart';
 
 // ── 和モダンカラーパレット ──────────────────────────────
 class WaColors {
@@ -280,46 +281,59 @@ class _WaNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          height: 1,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.transparent,
-                WaColors.gold.withValues(alpha: 0.6),
-                Colors.transparent,
-              ],
+    // タブバーの下に広告を置くため、NavigationBar 自身のセーフエリア余白を
+    // 取り除き、Column 全体を SafeArea で包んで最下部の余白を一括管理する
+    return Container(
+      color: const Color(0xFF0A1020),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 1,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    WaColors.gold.withValues(alpha: 0.6),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
             ),
-          ),
+            Builder(builder: (context) {
+              final l10n = AppLocalizations.of(context);
+              return MediaQuery.removePadding(
+                context: context,
+                removeBottom: true,
+                child: NavigationBar(
+                  selectedIndex: currentIndex,
+                  onDestinationSelected: onTap,
+                  destinations: [
+                    NavigationDestination(
+                      icon: const Icon(Icons.format_list_bulleted),
+                      selectedIcon: const Icon(Icons.format_list_bulleted),
+                      label: l10n.navList,
+                    ),
+                    NavigationDestination(
+                      icon: const Icon(Icons.grid_view_outlined),
+                      selectedIcon: const Icon(Icons.grid_view),
+                      label: l10n.navCard,
+                    ),
+                    NavigationDestination(
+                      icon: const Icon(Icons.casino_outlined),
+                      selectedIcon: const Icon(Icons.casino),
+                      label: l10n.navDraw,
+                    ),
+                  ],
+                ),
+              );
+            }),
+            const AdBanner(),
+          ],
         ),
-        Builder(builder: (context) {
-          final l10n = AppLocalizations.of(context);
-          return NavigationBar(
-            selectedIndex: currentIndex,
-            onDestinationSelected: onTap,
-            destinations: [
-              NavigationDestination(
-                icon: const Icon(Icons.format_list_bulleted),
-                selectedIcon: const Icon(Icons.format_list_bulleted),
-                label: l10n.navList,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.grid_view_outlined),
-                selectedIcon: const Icon(Icons.grid_view),
-                label: l10n.navCard,
-              ),
-              NavigationDestination(
-                icon: const Icon(Icons.casino_outlined),
-                selectedIcon: const Icon(Icons.casino),
-                label: l10n.navDraw,
-              ),
-            ],
-          );
-        }),
-      ],
+      ),
     );
   }
 }
