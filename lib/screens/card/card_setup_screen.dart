@@ -54,6 +54,7 @@ class _CardSetupScreenState extends ConsumerState<CardSetupScreen> {
                   ButtonSegment(value: 3, label: Text('3×3')),
                   ButtonSegment(value: 4, label: Text('4×4')),
                   ButtonSegment(value: 5, label: Text('5×5')),
+                  ButtonSegment(value: 6, label: Text('6×6')),
                 ],
                 selected: {_size},
                 onSelectionChanged: (s) => setState(() => _size = s.first),
