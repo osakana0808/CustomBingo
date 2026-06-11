@@ -1,0 +1,19 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- white-on-transparent silhouette for Android 13+ themed icons -->
+  <g>
+    <!-- card frame -->
+    <rect x="148" y="148" width="728" height="728" rx="64" fill="none" stroke="#FFFFFF" stroke-width="40"/>
+    <!-- grid lines (3x3) -->
+    <g stroke="#FFFFFF" stroke-width="28">
+      <line x1="397.3" y1="176" x2="397.3" y2="848"/>
+      <line x1="626.7" y1="176" x2="626.7" y2="848"/>
+      <line x1="176" y1="397.3" x2="848" y2="397.3"/>
+      <line x1="176" y1="626.7" x2="848" y2="626.7"/>
+    </g>
+    <!-- center star -->
+    <path fill="#FFFFFF" d="M512 424l26.4 53.4 59 8.6-42.7 41.6 10.1 58.8-52.8-27.8-52.8 27.8 10.1-58.8-42.7-41.6 59-8.6z"/>
+    <!-- corner accents: question marks -->
+    <text x="282.7" y="350" font-family="Helvetica, Arial, sans-serif" font-size="200" font-weight="bold" fill="#FFFFFF" text-anchor="middle">?</text>
+    <text x="741.3" y="808" font-family="Helvetica, Arial, sans-serif" font-size="200" font-weight="bold" fill="#FFFFFF" text-anchor="middle">?</text>
+  </g>
+</svg>

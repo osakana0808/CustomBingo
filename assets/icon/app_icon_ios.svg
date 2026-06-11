@@ -1,0 +1,88 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#243058"/>
+      <stop offset="1" stop-color="#0F1629"/>
+    </linearGradient>
+    <linearGradient id="goldFrame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0D060"/>
+      <stop offset="0.5" stop-color="#D4AF37"/>
+      <stop offset="1" stop-color="#A88A2A"/>
+    </linearGradient>
+    <radialGradient id="stamp" cx="0.4" cy="0.35" r="0.8">
+      <stop offset="0" stop-color="#E04444"/>
+      <stop offset="1" stop-color="#992222"/>
+    </radialGradient>
+  </defs>
+
+  <!-- background -->
+  <rect x="0" y="0" width="1024" height="1024" fill="url(#bg)"/>
+
+  <!-- card: gold frame + cream body -->
+  <rect x="148" y="148" width="728" height="728" rx="64" fill="url(#goldFrame)"/>
+  <rect x="168" y="168" width="688" height="688" rx="48" fill="#F5F0E8"/>
+
+  <!-- grid lines (3x3) -->
+  <g stroke="#D4AF37" stroke-width="14">
+    <line x1="397.3" y1="176" x2="397.3" y2="848"/>
+    <line x1="626.7" y1="176" x2="626.7" y2="848"/>
+    <line x1="176" y1="397.3" x2="848" y2="397.3"/>
+    <line x1="176" y1="626.7" x2="848" y2="626.7"/>
+  </g>
+
+  <!-- cell centers:
+       col x = 282.7 / 512 / 741.3
+       row y = 282.7 / 512 / 741.3 -->
+
+  <!-- r1c1: star -->
+  <path fill="#CC3333" d="M282.7 212l21.9 44.4 49 7.1-35.5 34.6 8.4 48.8-43.8-23-43.8 23 8.4-48.8-35.5-34.6 49-7.1z"/>
+
+  <!-- r1c2: question mark -->
+  <text x="512" y="332" font-family="Helvetica, Arial, sans-serif" font-size="190" font-weight="bold" fill="#CC3333" text-anchor="middle">?</text>
+
+  <!-- r1c3: eighth note -->
+  <g fill="#CC3333">
+    <ellipse cx="716" cy="334" rx="34" ry="26" transform="rotate(-20 716 334)"/>
+    <rect x="740" y="218" width="16" height="118"/>
+    <path d="M740 218q44 10 56 44q-6-44-56-66z"/>
+  </g>
+
+  <!-- r2c1: heart -->
+  <path fill="#CC3333" d="M282.7 564c-44-36-72-60-72-92 0-24 19-42 42-42 17 0 27 9 30 22 3-13 13-22 30-22 23 0 42 18 42 42 0 32-28 56-72 92z"/>
+
+  <!-- r2c2 (center): vermilion stamp + gold star -->
+  <circle cx="512" cy="512" r="92" fill="url(#stamp)"/>
+  <circle cx="512" cy="512" r="92" fill="none" stroke="#D4AF37" stroke-width="8"/>
+  <path fill="#F0D060" d="M512 446l17.6 35.6 39.3 5.7-28.4 27.7 6.7 39.2-35.2-18.5-35.2 18.5 6.7-39.2-28.4-27.7 39.3-5.7z"/>
+
+  <!-- r2c3: diamond -->
+  <path fill="#CC3333" d="M741.3 444l54 68-54 68-54-68z"/>
+
+  <!-- r3c1: question mark -->
+  <text x="282.7" y="790" font-family="Helvetica, Arial, sans-serif" font-size="190" font-weight="bold" fill="#CC3333" text-anchor="middle">?</text>
+
+  <!-- r3c2: smile -->
+  <g stroke="#CC3333" stroke-width="16" fill="none" stroke-linecap="round">
+    <circle cx="512" cy="741.3" r="62"/>
+    <path d="M484 752q28 26 56 0"/>
+  </g>
+  <g fill="#CC3333">
+    <circle cx="490" cy="726" r="10"/>
+    <circle cx="534" cy="726" r="10"/>
+  </g>
+
+  <!-- r3c3: sun -->
+  <g fill="#CC3333">
+    <circle cx="741.3" cy="741.3" r="40"/>
+  </g>
+  <g stroke="#CC3333" stroke-width="14" stroke-linecap="round">
+    <line x1="741.3" y1="672" x2="741.3" y2="652"/>
+    <line x1="741.3" y1="810" x2="741.3" y2="830"/>
+    <line x1="672" y1="741.3" x2="652" y2="741.3"/>
+    <line x1="810" y1="741.3" x2="830" y2="741.3"/>
+    <line x1="692" y1="692" x2="678" y2="678"/>
+    <line x1="790" y1="692" x2="804" y2="678"/>
+    <line x1="692" y1="790" x2="678" y2="804"/>
+    <line x1="790" y1="790" x2="804" y2="804"/>
+  </g>
+</svg>
