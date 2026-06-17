@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import '../../constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_card.dart';
+import '../../models/saved_bingo_card.dart';
 import '../../providers/card_provider.dart';
+import '../../providers/list_provider.dart';
+import '../../providers/saved_card_provider.dart';
 import '../../widgets/ad_banner.dart';
+import '../../widgets/save_name_dialog.dart';
 
 class CardPlayScreen extends ConsumerWidget {
   const CardPlayScreen({super.key});
@@ -17,13 +23,17 @@ class CardPlayScreen extends ConsumerWidget {
     }
 
     // ゲーム進行中（マークあり）は、誤って閉じて二度と同じカードに
-    // 戻れなくなるのを防ぐため、閉じる前に確認する
+    // 戻れなくなるのを防ぐため、閉じる前に確認する。
+    // ただし保存後に変更がなければ復元できるので確認は省略する。
     final hasProgress = card.cells.any(
       (row) => row.any((c) => c.isMarked && !c.isFree),
     );
+    final savedSignature = ref.watch(lastSavedCardSignatureProvider);
+    final hasUnsavedProgress =
+        hasProgress && cardSignature(card) != savedSignature;
 
     return PopScope(
-      canPop: !hasProgress,
+      canPop: !hasUnsavedProgress,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
         final confirmed = await showDialog<bool>(
@@ -51,6 +61,11 @@ class CardPlayScreen extends ConsumerWidget {
         appBar: AppBar(
           title: Text(l10n.cardPlayTitle),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.bookmark_add_outlined),
+              tooltip: l10n.cardSave,
+              onPressed: () => _saveCard(context, ref, card, l10n),
+            ),
             IconButton(
               icon: const Icon(Icons.refresh),
               tooltip: l10n.cardPlayReset,
@@ -127,6 +142,102 @@ class CardPlayScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  // 現在のカード（マーク状態を含む）を名前付きで保存する
+  Future<void> _saveCard(
+    BuildContext context,
+    WidgetRef ref,
+    BingoCard card,
+    AppLocalizations l10n,
+  ) async {
+    final lists = ref.read(bingoListsProvider).valueOrNull ?? [];
+    String listName = '';
+    for (final l in lists) {
+      if (l.id == card.listId) {
+        listName = l.name;
+        break;
+      }
+    }
+    final existing = ref.read(savedCardsProvider).valueOrNull ?? [];
+
+    // 上限に達している場合は上書き保存（または削除を促す）
+    if (existing.length >= kMaxSavedSlots) {
+      final targetId = await showSaveOverwritePicker(
+        context: context,
+        title: l10n.saveLimitTitle,
+        message: l10n.saveLimitMessage,
+        cancelLabel: l10n.listCancel,
+        entries: [
+          for (final c in existing)
+            OverwriteEntry(
+              id: c.id,
+              name: c.name,
+              subtitle: l10n.cardResumeSubtitle(
+                  c.listName, '${c.size}×${c.size}', c.markedCount),
+            ),
+        ],
+      );
+      if (targetId == null || !context.mounted) return;
+      final target = existing.firstWhere((c) => c.id == targetId);
+      // 上書き先の名前をプリセットしつつ、変更も可能にする
+      final newName = await showDialog<String>(
+        context: context,
+        builder: (ctx) => SaveNameDialog(
+          initial: target.name,
+          title: l10n.saveOverwriteTitle,
+          hint: l10n.cardSaveDialogHint,
+          okLabel: l10n.saveOverwrite,
+          cancelLabel: l10n.cardSaveDialogCancel,
+        ),
+      );
+      if (newName == null || newName.isEmpty) return;
+      final updated = SavedBingoCard.fromCard(
+        id: target.id,
+        name: newName,
+        listName: listName,
+        card: card,
+        updatedAt: DateTime.now(),
+      );
+      await ref.read(savedCardsProvider.notifier).save(updated);
+      ref.read(lastSavedCardSignatureProvider.notifier).state =
+          cardSignature(card);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.saveOverwriteSuccess(updated.name))),
+        );
+      }
+      return;
+    }
+
+    // 通常の新規保存
+    final name = await showDialog<String>(
+      context: context,
+      builder: (ctx) => SaveNameDialog(
+        initial: listName,
+        title: l10n.cardSaveDialogTitle,
+        hint: l10n.cardSaveDialogHint,
+        okLabel: l10n.cardSaveDialogOk,
+        cancelLabel: l10n.cardSaveDialogCancel,
+      ),
+    );
+    if (name == null || name.isEmpty) return;
+    const uuid = Uuid();
+    final saved = SavedBingoCard.fromCard(
+      id: uuid.v4(),
+      name: name,
+      listName: listName,
+      card: card,
+      updatedAt: DateTime.now(),
+    );
+    await ref.read(savedCardsProvider.notifier).save(saved);
+    ref.read(lastSavedCardSignatureProvider.notifier).state =
+        cardSignature(card);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.cardSaveSuccess(saved.name))),
+      );
+    }
   }
 }
 

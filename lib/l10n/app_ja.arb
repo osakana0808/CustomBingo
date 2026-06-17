@@ -73,6 +73,40 @@
   "cardPlayEmpty": "カードがありません",
   "cardPlayBingo": "🎉　BINGO!　🎉",
 
+  "cardSave": "保存",
+  "cardSaveDialogTitle": "カードを保存",
+  "cardSaveDialogHint": "保存名を入力",
+  "cardSaveDialogOk": "保存",
+  "cardSaveDialogCancel": "キャンセル",
+  "cardSaveSuccess": "「{name}」を保存しました",
+  "@cardSaveSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "cardResumeButton": "保存したカードを再開（{count}件）",
+  "@cardResumeButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cardResumeTitle": "保存したカード",
+  "cardResumeEmpty": "保存されたカードはありません",
+  "cardResumeDelete": "削除",
+  "cardResumeSubtitle": "{listName}・{size}・マーク{marked}マス",
+  "@cardResumeSubtitle": {
+    "placeholders": {
+      "listName": { "type": "String" },
+      "size": { "type": "String" },
+      "marked": { "type": "int" }
+    }
+  },
+
+  "saveLimitTitle": "保存できるのは5件までです",
+  "saveLimitMessage": "上書きする保存先を選んでください。不要なものは再開リストから削除できます。",
+  "saveOverwrite": "上書き",
+  "saveOverwriteTitle": "上書き保存",
+  "saveOverwriteSuccess": "「{name}」に上書き保存しました",
+  "@saveOverwriteSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
   "drawTitle": "抽選",
   "drawHistory": "履歴",
   "drawStop": "終了",
@@ -96,6 +130,31 @@
   "drawSkinLabel": "ガラガラのスキン",
   "drawSkinWooden": "木製",
   "drawSkinCasino": "カジノ",
+
+  "drawSave": "保存",
+  "drawSaveDialogTitle": "進行状況を保存",
+  "drawSaveDialogHint": "保存名を入力",
+  "drawSaveDialogOk": "保存",
+  "drawSaveDialogCancel": "キャンセル",
+  "drawSaveSuccess": "「{name}」を保存しました",
+  "@drawSaveSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "drawResumeButton": "保存した進行を再開（{count}件）",
+  "@drawResumeButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "drawResumeTitle": "保存した進行",
+  "drawResumeEmpty": "保存された進行はありません",
+  "drawResumeDelete": "削除",
+  "drawResumeSubtitle": "{listName}・抽選済み{drawn}件／残り{remaining}件",
+  "@drawResumeSubtitle": {
+    "placeholders": {
+      "listName": { "type": "String" },
+      "drawn": { "type": "int" },
+      "remaining": { "type": "int" }
+    }
+  },
 
   "historyTitle": "抽選履歴（{count}件）",
   "@historyTitle": {

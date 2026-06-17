@@ -156,6 +156,62 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cardPlayBingo => '🎉　BINGO!　🎉';
 
   @override
+  String get cardSave => '保存';
+
+  @override
+  String get cardSaveDialogTitle => 'カードを保存';
+
+  @override
+  String get cardSaveDialogHint => '保存名を入力';
+
+  @override
+  String get cardSaveDialogOk => '保存';
+
+  @override
+  String get cardSaveDialogCancel => 'キャンセル';
+
+  @override
+  String cardSaveSuccess(String name) {
+    return '「$name」を保存しました';
+  }
+
+  @override
+  String cardResumeButton(int count) {
+    return '保存したカードを再開（$count件）';
+  }
+
+  @override
+  String get cardResumeTitle => '保存したカード';
+
+  @override
+  String get cardResumeEmpty => '保存されたカードはありません';
+
+  @override
+  String get cardResumeDelete => '削除';
+
+  @override
+  String cardResumeSubtitle(String listName, String size, int marked) {
+    return '$listName・$size・マーク$markedマス';
+  }
+
+  @override
+  String get saveLimitTitle => '保存できるのは5件までです';
+
+  @override
+  String get saveLimitMessage => '上書きする保存先を選んでください。不要なものは再開リストから削除できます。';
+
+  @override
+  String get saveOverwrite => '上書き';
+
+  @override
+  String get saveOverwriteTitle => '上書き保存';
+
+  @override
+  String saveOverwriteSuccess(String name) {
+    return '「$name」に上書き保存しました';
+  }
+
+  @override
   String get drawTitle => '抽選';
 
   @override
@@ -200,6 +256,45 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get drawSkinCasino => 'カジノ';
+
+  @override
+  String get drawSave => '保存';
+
+  @override
+  String get drawSaveDialogTitle => '進行状況を保存';
+
+  @override
+  String get drawSaveDialogHint => '保存名を入力';
+
+  @override
+  String get drawSaveDialogOk => '保存';
+
+  @override
+  String get drawSaveDialogCancel => 'キャンセル';
+
+  @override
+  String drawSaveSuccess(String name) {
+    return '「$name」を保存しました';
+  }
+
+  @override
+  String drawResumeButton(int count) {
+    return '保存した進行を再開（$count件）';
+  }
+
+  @override
+  String get drawResumeTitle => '保存した進行';
+
+  @override
+  String get drawResumeEmpty => '保存された進行はありません';
+
+  @override
+  String get drawResumeDelete => '削除';
+
+  @override
+  String drawResumeSubtitle(String listName, int drawn, int remaining) {
+    return '$listName・抽選済み$drawn件／残り$remaining件';
+  }
 
   @override
   String historyTitle(int count) {

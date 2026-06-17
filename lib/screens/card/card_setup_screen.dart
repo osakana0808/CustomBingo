@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_list.dart';
+import '../../models/saved_bingo_card.dart';
 import '../../providers/list_provider.dart';
 import '../../providers/card_provider.dart';
+import '../../providers/saved_card_provider.dart';
 import '../../services/card_service.dart';
 import 'card_play_screen.dart';
 
@@ -23,6 +25,7 @@ class _CardSetupScreenState extends ConsumerState<CardSetupScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final listsAsync = ref.watch(bingoListsProvider);
+    final savedCount = ref.watch(savedCardsProvider).valueOrNull?.length ?? 0;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.cardSetupTitle)),
@@ -74,6 +77,14 @@ class _CardSetupScreenState extends ConsumerState<CardSetupScreen> {
                 label: Text(l10n.cardSetupGenerate),
                 onPressed: _selectedList != null ? _generate : null,
               ),
+              if (savedCount > 0) ...[
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.bookmark_outline),
+                  label: Text(l10n.cardResumeButton(savedCount)),
+                  onPressed: () => _showResumeSheet(l10n),
+                ),
+              ],
             ],
           );
         },
@@ -93,6 +104,64 @@ class _CardSetupScreenState extends ConsumerState<CardSetupScreen> {
     );
   }
 
+  void _resume(SavedBingoCard saved) {
+    final card = saved.toBingoCard();
+    ref.read(cardProvider.notifier).setCard(card);
+    // 復元直後は保存時点と同じ状態なので、変更がなければ閉じる確認を省略する
+    ref.read(lastSavedCardSignatureProvider.notifier).state =
+        cardSignature(card);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const CardPlayScreen()),
+    );
+  }
+
+  Future<void> _showResumeSheet(AppLocalizations l10n) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (sheetCtx) => Consumer(
+        builder: (context, ref, _) {
+          final cards = ref.watch(savedCardsProvider).valueOrNull ?? [];
+          return SafeArea(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Text(
+                    l10n.cardResumeTitle,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                if (cards.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(l10n.cardResumeEmpty),
+                  ),
+                for (final c in cards)
+                  ListTile(
+                    title: Text(c.name),
+                    subtitle: Text(l10n.cardResumeSubtitle(
+                        c.listName, '${c.size}×${c.size}', c.markedCount)),
+                    onTap: () {
+                      Navigator.pop(sheetCtx);
+                      _resume(c);
+                    },
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete_outline),
+                      tooltip: l10n.cardResumeDelete,
+                      onPressed: () =>
+                          ref.read(savedCardsProvider.notifier).delete(c.id),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   void _generate() {
     final list = _selectedList;
     if (list == null) return;
@@ -103,6 +172,8 @@ class _CardSetupScreenState extends ConsumerState<CardSetupScreen> {
         hasFreeSpace: _hasFreeSpace,
       );
       ref.read(cardProvider.notifier).setCard(card);
+      // 新規カードは未保存。閉じる時に確認させるため署名をクリアする
+      ref.read(lastSavedCardSignatureProvider.notifier).state = null;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const CardPlayScreen()),

@@ -157,6 +157,63 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cardPlayBingo => '🎉  BINGO!  🎉';
 
   @override
+  String get cardSave => 'Save';
+
+  @override
+  String get cardSaveDialogTitle => 'Save card';
+
+  @override
+  String get cardSaveDialogHint => 'Enter a name';
+
+  @override
+  String get cardSaveDialogOk => 'Save';
+
+  @override
+  String get cardSaveDialogCancel => 'Cancel';
+
+  @override
+  String cardSaveSuccess(String name) {
+    return 'Saved \"$name\"';
+  }
+
+  @override
+  String cardResumeButton(int count) {
+    return 'Resume saved card ($count)';
+  }
+
+  @override
+  String get cardResumeTitle => 'Saved cards';
+
+  @override
+  String get cardResumeEmpty => 'No saved cards';
+
+  @override
+  String get cardResumeDelete => 'Delete';
+
+  @override
+  String cardResumeSubtitle(String listName, String size, int marked) {
+    return '$listName · $size · $marked marked';
+  }
+
+  @override
+  String get saveLimitTitle => 'You can save up to 5';
+
+  @override
+  String get saveLimitMessage =>
+      'Choose a save to overwrite. You can also delete one from the resume list.';
+
+  @override
+  String get saveOverwrite => 'Overwrite';
+
+  @override
+  String get saveOverwriteTitle => 'Overwrite save';
+
+  @override
+  String saveOverwriteSuccess(String name) {
+    return 'Overwrote \"$name\"';
+  }
+
+  @override
   String get drawTitle => 'Draw';
 
   @override
@@ -201,6 +258,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get drawSkinCasino => 'Casino';
+
+  @override
+  String get drawSave => 'Save';
+
+  @override
+  String get drawSaveDialogTitle => 'Save progress';
+
+  @override
+  String get drawSaveDialogHint => 'Enter a name';
+
+  @override
+  String get drawSaveDialogOk => 'Save';
+
+  @override
+  String get drawSaveDialogCancel => 'Cancel';
+
+  @override
+  String drawSaveSuccess(String name) {
+    return 'Saved \"$name\"';
+  }
+
+  @override
+  String drawResumeButton(int count) {
+    return 'Resume saved progress ($count)';
+  }
+
+  @override
+  String get drawResumeTitle => 'Saved progress';
+
+  @override
+  String get drawResumeEmpty => 'No saved progress';
+
+  @override
+  String get drawResumeDelete => 'Delete';
+
+  @override
+  String drawResumeSubtitle(String listName, int drawn, int remaining) {
+    return '$listName · $drawn drawn / $remaining left';
+  }
 
   @override
   String historyTitle(int count) {

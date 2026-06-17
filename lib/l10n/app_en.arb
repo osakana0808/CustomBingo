@@ -52,6 +52,40 @@
   "cardPlayEmpty": "No card available",
   "cardPlayBingo": "🎉  BINGO!  🎉",
 
+  "cardSave": "Save",
+  "cardSaveDialogTitle": "Save card",
+  "cardSaveDialogHint": "Enter a name",
+  "cardSaveDialogOk": "Save",
+  "cardSaveDialogCancel": "Cancel",
+  "cardSaveSuccess": "Saved \"{name}\"",
+  "@cardSaveSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "cardResumeButton": "Resume saved card ({count})",
+  "@cardResumeButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cardResumeTitle": "Saved cards",
+  "cardResumeEmpty": "No saved cards",
+  "cardResumeDelete": "Delete",
+  "cardResumeSubtitle": "{listName} · {size} · {marked} marked",
+  "@cardResumeSubtitle": {
+    "placeholders": {
+      "listName": { "type": "String" },
+      "size": { "type": "String" },
+      "marked": { "type": "int" }
+    }
+  },
+
+  "saveLimitTitle": "You can save up to 5",
+  "saveLimitMessage": "Choose a save to overwrite. You can also delete one from the resume list.",
+  "saveOverwrite": "Overwrite",
+  "saveOverwriteTitle": "Overwrite save",
+  "saveOverwriteSuccess": "Overwrote \"{name}\"",
+  "@saveOverwriteSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
   "drawTitle": "Draw",
   "drawHistory": "History",
   "drawStop": "Stop",
@@ -66,6 +100,31 @@
   "drawSkinLabel": "Drum Skin",
   "drawSkinWooden": "Wooden",
   "drawSkinCasino": "Casino",
+
+  "drawSave": "Save",
+  "drawSaveDialogTitle": "Save progress",
+  "drawSaveDialogHint": "Enter a name",
+  "drawSaveDialogOk": "Save",
+  "drawSaveDialogCancel": "Cancel",
+  "drawSaveSuccess": "Saved \"{name}\"",
+  "@drawSaveSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "drawResumeButton": "Resume saved progress ({count})",
+  "@drawResumeButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "drawResumeTitle": "Saved progress",
+  "drawResumeEmpty": "No saved progress",
+  "drawResumeDelete": "Delete",
+  "drawResumeSubtitle": "{listName} · {drawn} drawn / {remaining} left",
+  "@drawResumeSubtitle": {
+    "placeholders": {
+      "listName": { "type": "String" },
+      "drawn": { "type": "int" },
+      "remaining": { "type": "int" }
+    }
+  },
 
   "historyTitle": "History ({count})",
   "historyEmpty": "No draws yet",
