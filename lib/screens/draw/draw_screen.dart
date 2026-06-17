@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:uuid/uuid.dart';
 import '../../app.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_list.dart';
 import '../../models/draw_session.dart';
 import '../../models/lottery_skin.dart';
+import '../../models/saved_draw_session.dart';
 import '../../providers/draw_provider.dart';
 import '../../providers/list_provider.dart';
 import '../../providers/purchase_provider.dart';
+import '../../providers/saved_session_provider.dart';
 import '../../providers/skin_provider.dart';
 import '../paywall_screen.dart';
 import 'history_screen.dart';
@@ -47,6 +50,12 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
       appBar: AppBar(
         title: Text(l10n.drawTitle),
         actions: [
+          if (session != null)
+            IconButton(
+              icon: const Icon(Icons.bookmark_add_outlined),
+              tooltip: l10n.drawSave,
+              onPressed: () => _saveSession(session, l10n),
+            ),
           if (session != null)
             IconButton(
               icon: const Icon(Icons.history),
@@ -93,6 +102,92 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
     }
   }
 
+  // 現在の進行状況を名前付きで保存する（麻雀など長時間の進行を中断・再開できる）
+  Future<void> _saveSession(DrawSession session, AppLocalizations l10n) async {
+    final lists = ref.read(bingoListsProvider).valueOrNull ?? [];
+    BingoList? list;
+    for (final l in lists) {
+      if (l.id == session.listId) {
+        list = l;
+        break;
+      }
+    }
+    final name = await showDialog<String>(
+      context: context,
+      builder: (ctx) => _SaveSessionDialog(initial: list?.name ?? ''),
+    );
+    if (name == null || name.isEmpty) return;
+    const uuid = Uuid();
+    final saved = SavedDrawSession(
+      id: uuid.v4(),
+      name: name,
+      listId: session.listId,
+      listName: list?.name ?? '',
+      drawnItems: session.drawnItems,
+      remaining: session.remaining,
+      updatedAt: DateTime.now(),
+    );
+    await ref.read(savedSessionsProvider.notifier).save(saved);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.drawSaveSuccess(saved.name))),
+      );
+    }
+  }
+
+  void _resume(SavedDrawSession saved) {
+    setState(() => _displayedResult =
+        saved.drawnItems.isEmpty ? null : saved.drawnItems.last);
+    ref.read(drawProvider.notifier).restore(saved.toDrawSession());
+  }
+
+  Future<void> _showResumeSheet(AppLocalizations l10n) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (sheetCtx) => Consumer(
+        builder: (context, ref, _) {
+          final sessions =
+              ref.watch(savedSessionsProvider).valueOrNull ?? [];
+          return SafeArea(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Text(
+                    l10n.drawResumeTitle,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                if (sessions.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(l10n.drawResumeEmpty),
+                  ),
+                for (final s in sessions)
+                  ListTile(
+                    title: Text(s.name),
+                    subtitle: Text(l10n.drawResumeSubtitle(
+                        s.listName, s.drawnItems.length, s.remaining.length)),
+                    onTap: () {
+                      Navigator.pop(sheetCtx);
+                      _resume(s);
+                    },
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete_outline),
+                      tooltip: l10n.drawResumeDelete,
+                      onPressed: () =>
+                          ref.read(savedSessionsProvider.notifier).delete(s.id),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildBody(
     AsyncValue<List<BingoList>> listsAsync,
     DrawSession? session,
@@ -119,6 +214,7 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
 
   Widget _buildSetup(List<BingoList> lists, AppLocalizations l10n) {
     final currentSkin = ref.watch(skinProvider);
+    final savedCount = ref.watch(savedSessionsProvider).valueOrNull?.length ?? 0;
 
     return Padding(
       padding: const EdgeInsets.all(24),
@@ -199,6 +295,15 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
               );
             }).toList(),
           ),
+
+          if (savedCount > 0) ...[
+            const SizedBox(height: 24),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.bookmark_outline),
+              label: Text(l10n.drawResumeButton(savedCount)),
+              onPressed: () => _showResumeSheet(l10n),
+            ),
+          ],
 
           const Spacer(),
           FilledButton.icon(
@@ -383,6 +488,49 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
       barrierColor: Colors.transparent,
       pageBuilder: (_, __, ___) =>
           LotteryAnimationWidget(item: item, onComplete: nav.pop, skin: skin),
+    );
+  }
+}
+
+class _SaveSessionDialog extends StatefulWidget {
+  const _SaveSessionDialog({required this.initial});
+  final String initial;
+
+  @override
+  State<_SaveSessionDialog> createState() => _SaveSessionDialogState();
+}
+
+class _SaveSessionDialogState extends State<_SaveSessionDialog> {
+  late final TextEditingController _ctrl =
+      TextEditingController(text: widget.initial);
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(l10n.drawSaveDialogTitle),
+      content: TextField(
+        controller: _ctrl,
+        autofocus: true,
+        decoration: InputDecoration(hintText: l10n.drawSaveDialogHint),
+        onSubmitted: (v) => Navigator.pop(context, v.trim()),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.drawSaveDialogCancel),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, _ctrl.text.trim()),
+          child: Text(l10n.drawSaveDialogOk),
+        ),
+      ],
     );
   }
 }

@@ -67,6 +67,31 @@
   "drawSkinWooden": "Wooden",
   "drawSkinCasino": "Casino",
 
+  "drawSave": "Save",
+  "drawSaveDialogTitle": "Save progress",
+  "drawSaveDialogHint": "Enter a name",
+  "drawSaveDialogOk": "Save",
+  "drawSaveDialogCancel": "Cancel",
+  "drawSaveSuccess": "Saved \"{name}\"",
+  "@drawSaveSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "drawResumeButton": "Resume saved progress ({count})",
+  "@drawResumeButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "drawResumeTitle": "Saved progress",
+  "drawResumeEmpty": "No saved progress",
+  "drawResumeDelete": "Delete",
+  "drawResumeSubtitle": "{listName} · {drawn} drawn / {remaining} left",
+  "@drawResumeSubtitle": {
+    "placeholders": {
+      "listName": { "type": "String" },
+      "drawn": { "type": "int" },
+      "remaining": { "type": "int" }
+    }
+  },
+
   "historyTitle": "History ({count})",
   "historyEmpty": "No draws yet",
 

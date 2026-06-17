@@ -203,6 +203,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drawSkinCasino => 'Casino';
 
   @override
+  String get drawSave => 'Save';
+
+  @override
+  String get drawSaveDialogTitle => 'Save progress';
+
+  @override
+  String get drawSaveDialogHint => 'Enter a name';
+
+  @override
+  String get drawSaveDialogOk => 'Save';
+
+  @override
+  String get drawSaveDialogCancel => 'Cancel';
+
+  @override
+  String drawSaveSuccess(String name) {
+    return 'Saved \"$name\"';
+  }
+
+  @override
+  String drawResumeButton(int count) {
+    return 'Resume saved progress ($count)';
+  }
+
+  @override
+  String get drawResumeTitle => 'Saved progress';
+
+  @override
+  String get drawResumeEmpty => 'No saved progress';
+
+  @override
+  String get drawResumeDelete => 'Delete';
+
+  @override
+  String drawResumeSubtitle(String listName, int drawn, int remaining) {
+    return '$listName · $drawn drawn / $remaining left';
+  }
+
+  @override
   String historyTitle(int count) {
     return 'History ($count)';
   }

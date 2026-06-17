@@ -202,6 +202,45 @@ class AppLocalizationsJa extends AppLocalizations {
   String get drawSkinCasino => 'カジノ';
 
   @override
+  String get drawSave => '保存';
+
+  @override
+  String get drawSaveDialogTitle => '進行状況を保存';
+
+  @override
+  String get drawSaveDialogHint => '保存名を入力';
+
+  @override
+  String get drawSaveDialogOk => '保存';
+
+  @override
+  String get drawSaveDialogCancel => 'キャンセル';
+
+  @override
+  String drawSaveSuccess(String name) {
+    return '「$name」を保存しました';
+  }
+
+  @override
+  String drawResumeButton(int count) {
+    return '保存した進行を再開（$count件）';
+  }
+
+  @override
+  String get drawResumeTitle => '保存した進行';
+
+  @override
+  String get drawResumeEmpty => '保存された進行はありません';
+
+  @override
+  String get drawResumeDelete => '削除';
+
+  @override
+  String drawResumeSubtitle(String listName, int drawn, int remaining) {
+    return '$listName・抽選済み$drawn件／残り$remaining件';
+  }
+
+  @override
   String historyTitle(int count) {
     return '抽選履歴（$count件）';
   }

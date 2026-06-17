@@ -19,6 +19,9 @@ class DrawNotifier extends Notifier<DrawSession?> {
     state = session.draw();
   }
 
+  /// 保存済みの進行状況を復元する
+  void restore(DrawSession session) => state = session;
+
   void reset() => state = null;
 }
 

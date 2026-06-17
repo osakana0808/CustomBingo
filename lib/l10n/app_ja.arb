@@ -97,6 +97,31 @@
   "drawSkinWooden": "木製",
   "drawSkinCasino": "カジノ",
 
+  "drawSave": "保存",
+  "drawSaveDialogTitle": "進行状況を保存",
+  "drawSaveDialogHint": "保存名を入力",
+  "drawSaveDialogOk": "保存",
+  "drawSaveDialogCancel": "キャンセル",
+  "drawSaveSuccess": "「{name}」を保存しました",
+  "@drawSaveSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "drawResumeButton": "保存した進行を再開（{count}件）",
+  "@drawResumeButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "drawResumeTitle": "保存した進行",
+  "drawResumeEmpty": "保存された進行はありません",
+  "drawResumeDelete": "削除",
+  "drawResumeSubtitle": "{listName}・抽選済み{drawn}件／残り{remaining}件",
+  "@drawResumeSubtitle": {
+    "placeholders": {
+      "listName": { "type": "String" },
+      "drawn": { "type": "int" },
+      "remaining": { "type": "int" }
+    }
+  },
+
   "historyTitle": "抽選履歴（{count}件）",
   "@historyTitle": {
     "placeholders": { "count": { "type": "int" } }

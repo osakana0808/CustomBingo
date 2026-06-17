@@ -452,6 +452,72 @@ abstract class AppLocalizations {
   /// **'カジノ'**
   String get drawSkinCasino;
 
+  /// No description provided for @drawSave.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存'**
+  String get drawSave;
+
+  /// No description provided for @drawSaveDialogTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'進行状況を保存'**
+  String get drawSaveDialogTitle;
+
+  /// No description provided for @drawSaveDialogHint.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存名を入力'**
+  String get drawSaveDialogHint;
+
+  /// No description provided for @drawSaveDialogOk.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存'**
+  String get drawSaveDialogOk;
+
+  /// No description provided for @drawSaveDialogCancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get drawSaveDialogCancel;
+
+  /// No description provided for @drawSaveSuccess.
+  ///
+  /// In ja, this message translates to:
+  /// **'「{name}」を保存しました'**
+  String drawSaveSuccess(String name);
+
+  /// No description provided for @drawResumeButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存した進行を再開（{count}件）'**
+  String drawResumeButton(int count);
+
+  /// No description provided for @drawResumeTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存した進行'**
+  String get drawResumeTitle;
+
+  /// No description provided for @drawResumeEmpty.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存された進行はありません'**
+  String get drawResumeEmpty;
+
+  /// No description provided for @drawResumeDelete.
+  ///
+  /// In ja, this message translates to:
+  /// **'削除'**
+  String get drawResumeDelete;
+
+  /// No description provided for @drawResumeSubtitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'{listName}・抽選済み{drawn}件／残り{remaining}件'**
+  String drawResumeSubtitle(String listName, int drawn, int remaining);
+
   /// No description provided for @historyTitle.
   ///
   /// In ja, this message translates to:
