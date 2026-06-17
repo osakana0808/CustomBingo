@@ -45,20 +45,21 @@ class DatabaseService {
       )
     ''');
 
-    await _createDrawSessions(db);
+    await _createSaveTables(db);
   }
 
-  // 既存ユーザー（version 1）のデータを保持したまま draw_sessions を追加する
+  // 既存ユーザー（version 1）のデータを保持したまま保存用テーブルを追加する
   static Future<void> _onUpgrade(
       Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      await _createDrawSessions(db);
+      await _createSaveTables(db);
     }
   }
 
-  static Future<void> _createDrawSessions(Database db) async {
-    // 再開に必要な情報を自己完結で持つため、リスト削除時の連動は行わず
-    // list_name をスナップショットとして保持する
+  // 進捗保存（抽選・カード）のテーブルを作成する。
+  // 再開に必要な情報を自己完結で持つため、リスト削除時の連動は行わず
+  // list_name をスナップショットとして保持する。
+  static Future<void> _createSaveTables(Database db) async {
     await db.execute('''
       CREATE TABLE draw_sessions (
         id TEXT PRIMARY KEY,
@@ -67,6 +68,20 @@ class DatabaseService {
         list_name TEXT NOT NULL DEFAULT '',
         drawn_items TEXT NOT NULL,
         remaining_items TEXT NOT NULL,
+        updated_at INTEGER NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE saved_cards (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        card_id TEXT NOT NULL,
+        list_id TEXT NOT NULL,
+        list_name TEXT NOT NULL DEFAULT '',
+        size INTEGER NOT NULL,
+        has_free_space INTEGER NOT NULL,
+        cells TEXT NOT NULL,
         updated_at INTEGER NOT NULL
       )
     ''');

@@ -368,6 +368,72 @@ abstract class AppLocalizations {
   /// **'🎉　BINGO!　🎉'**
   String get cardPlayBingo;
 
+  /// No description provided for @cardSave.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存'**
+  String get cardSave;
+
+  /// No description provided for @cardSaveDialogTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'カードを保存'**
+  String get cardSaveDialogTitle;
+
+  /// No description provided for @cardSaveDialogHint.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存名を入力'**
+  String get cardSaveDialogHint;
+
+  /// No description provided for @cardSaveDialogOk.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存'**
+  String get cardSaveDialogOk;
+
+  /// No description provided for @cardSaveDialogCancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get cardSaveDialogCancel;
+
+  /// No description provided for @cardSaveSuccess.
+  ///
+  /// In ja, this message translates to:
+  /// **'「{name}」を保存しました'**
+  String cardSaveSuccess(String name);
+
+  /// No description provided for @cardResumeButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存したカードを再開（{count}件）'**
+  String cardResumeButton(int count);
+
+  /// No description provided for @cardResumeTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存したカード'**
+  String get cardResumeTitle;
+
+  /// No description provided for @cardResumeEmpty.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存されたカードはありません'**
+  String get cardResumeEmpty;
+
+  /// No description provided for @cardResumeDelete.
+  ///
+  /// In ja, this message translates to:
+  /// **'削除'**
+  String get cardResumeDelete;
+
+  /// No description provided for @cardResumeSubtitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'{listName}・{size}・マーク{marked}マス'**
+  String cardResumeSubtitle(String listName, String size, int marked);
+
   /// No description provided for @drawTitle.
   ///
   /// In ja, this message translates to:

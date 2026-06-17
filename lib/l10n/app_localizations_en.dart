@@ -157,6 +157,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cardPlayBingo => '🎉  BINGO!  🎉';
 
   @override
+  String get cardSave => 'Save';
+
+  @override
+  String get cardSaveDialogTitle => 'Save card';
+
+  @override
+  String get cardSaveDialogHint => 'Enter a name';
+
+  @override
+  String get cardSaveDialogOk => 'Save';
+
+  @override
+  String get cardSaveDialogCancel => 'Cancel';
+
+  @override
+  String cardSaveSuccess(String name) {
+    return 'Saved \"$name\"';
+  }
+
+  @override
+  String cardResumeButton(int count) {
+    return 'Resume saved card ($count)';
+  }
+
+  @override
+  String get cardResumeTitle => 'Saved cards';
+
+  @override
+  String get cardResumeEmpty => 'No saved cards';
+
+  @override
+  String get cardResumeDelete => 'Delete';
+
+  @override
+  String cardResumeSubtitle(String listName, String size, int marked) {
+    return '$listName · $size · $marked marked';
+  }
+
+  @override
   String get drawTitle => 'Draw';
 
   @override

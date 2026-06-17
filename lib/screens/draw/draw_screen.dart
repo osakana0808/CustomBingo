@@ -14,6 +14,7 @@ import '../../providers/list_provider.dart';
 import '../../providers/purchase_provider.dart';
 import '../../providers/saved_session_provider.dart';
 import '../../providers/skin_provider.dart';
+import '../../widgets/save_name_dialog.dart';
 import '../paywall_screen.dart';
 import 'history_screen.dart';
 import 'lottery_animation.dart';
@@ -114,7 +115,13 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
     }
     final name = await showDialog<String>(
       context: context,
-      builder: (ctx) => _SaveSessionDialog(initial: list?.name ?? ''),
+      builder: (ctx) => SaveNameDialog(
+        initial: list?.name ?? '',
+        title: l10n.drawSaveDialogTitle,
+        hint: l10n.drawSaveDialogHint,
+        okLabel: l10n.drawSaveDialogOk,
+        cancelLabel: l10n.drawSaveDialogCancel,
+      ),
     );
     if (name == null || name.isEmpty) return;
     const uuid = Uuid();
@@ -488,49 +495,6 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
       barrierColor: Colors.transparent,
       pageBuilder: (_, __, ___) =>
           LotteryAnimationWidget(item: item, onComplete: nav.pop, skin: skin),
-    );
-  }
-}
-
-class _SaveSessionDialog extends StatefulWidget {
-  const _SaveSessionDialog({required this.initial});
-  final String initial;
-
-  @override
-  State<_SaveSessionDialog> createState() => _SaveSessionDialogState();
-}
-
-class _SaveSessionDialogState extends State<_SaveSessionDialog> {
-  late final TextEditingController _ctrl =
-      TextEditingController(text: widget.initial);
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return AlertDialog(
-      title: Text(l10n.drawSaveDialogTitle),
-      content: TextField(
-        controller: _ctrl,
-        autofocus: true,
-        decoration: InputDecoration(hintText: l10n.drawSaveDialogHint),
-        onSubmitted: (v) => Navigator.pop(context, v.trim()),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(l10n.drawSaveDialogCancel),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, _ctrl.text.trim()),
-          child: Text(l10n.drawSaveDialogOk),
-        ),
-      ],
     );
   }
 }

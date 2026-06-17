@@ -156,6 +156,45 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cardPlayBingo => '🎉　BINGO!　🎉';
 
   @override
+  String get cardSave => '保存';
+
+  @override
+  String get cardSaveDialogTitle => 'カードを保存';
+
+  @override
+  String get cardSaveDialogHint => '保存名を入力';
+
+  @override
+  String get cardSaveDialogOk => '保存';
+
+  @override
+  String get cardSaveDialogCancel => 'キャンセル';
+
+  @override
+  String cardSaveSuccess(String name) {
+    return '「$name」を保存しました';
+  }
+
+  @override
+  String cardResumeButton(int count) {
+    return '保存したカードを再開（$count件）';
+  }
+
+  @override
+  String get cardResumeTitle => '保存したカード';
+
+  @override
+  String get cardResumeEmpty => '保存されたカードはありません';
+
+  @override
+  String get cardResumeDelete => '削除';
+
+  @override
+  String cardResumeSubtitle(String listName, String size, int marked) {
+    return '$listName・$size・マーク$markedマス';
+  }
+
+  @override
   String get drawTitle => '抽選';
 
   @override

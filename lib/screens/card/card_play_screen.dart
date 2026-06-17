@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_card.dart';
+import '../../models/bingo_list.dart';
+import '../../models/saved_bingo_card.dart';
 import '../../providers/card_provider.dart';
+import '../../providers/list_provider.dart';
+import '../../providers/saved_card_provider.dart';
 import '../../widgets/ad_banner.dart';
+import '../../widgets/save_name_dialog.dart';
 
 class CardPlayScreen extends ConsumerWidget {
   const CardPlayScreen({super.key});
@@ -51,6 +57,11 @@ class CardPlayScreen extends ConsumerWidget {
         appBar: AppBar(
           title: Text(l10n.cardPlayTitle),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.bookmark_add_outlined),
+              tooltip: l10n.cardSave,
+              onPressed: () => _saveCard(context, ref, card, l10n),
+            ),
             IconButton(
               icon: const Icon(Icons.refresh),
               tooltip: l10n.cardPlayReset,
@@ -127,6 +138,48 @@ class CardPlayScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  // 現在のカード（マーク状態を含む）を名前付きで保存する
+  Future<void> _saveCard(
+    BuildContext context,
+    WidgetRef ref,
+    BingoCard card,
+    AppLocalizations l10n,
+  ) async {
+    final lists = ref.read(bingoListsProvider).valueOrNull ?? [];
+    BingoList? list;
+    for (final l in lists) {
+      if (l.id == card.listId) {
+        list = l;
+        break;
+      }
+    }
+    final name = await showDialog<String>(
+      context: context,
+      builder: (ctx) => SaveNameDialog(
+        initial: list?.name ?? '',
+        title: l10n.cardSaveDialogTitle,
+        hint: l10n.cardSaveDialogHint,
+        okLabel: l10n.cardSaveDialogOk,
+        cancelLabel: l10n.cardSaveDialogCancel,
+      ),
+    );
+    if (name == null || name.isEmpty) return;
+    const uuid = Uuid();
+    final saved = SavedBingoCard.fromCard(
+      id: uuid.v4(),
+      name: name,
+      listName: list?.name ?? '',
+      card: card,
+      updatedAt: DateTime.now(),
+    );
+    await ref.read(savedCardsProvider.notifier).save(saved);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.cardSaveSuccess(saved.name))),
+      );
+    }
   }
 }
 

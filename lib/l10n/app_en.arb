@@ -52,6 +52,31 @@
   "cardPlayEmpty": "No card available",
   "cardPlayBingo": "🎉  BINGO!  🎉",
 
+  "cardSave": "Save",
+  "cardSaveDialogTitle": "Save card",
+  "cardSaveDialogHint": "Enter a name",
+  "cardSaveDialogOk": "Save",
+  "cardSaveDialogCancel": "Cancel",
+  "cardSaveSuccess": "Saved \"{name}\"",
+  "@cardSaveSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "cardResumeButton": "Resume saved card ({count})",
+  "@cardResumeButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cardResumeTitle": "Saved cards",
+  "cardResumeEmpty": "No saved cards",
+  "cardResumeDelete": "Delete",
+  "cardResumeSubtitle": "{listName} · {size} · {marked} marked",
+  "@cardResumeSubtitle": {
+    "placeholders": {
+      "listName": { "type": "String" },
+      "size": { "type": "String" },
+      "marked": { "type": "int" }
+    }
+  },
+
   "drawTitle": "Draw",
   "drawHistory": "History",
   "drawStop": "Stop",

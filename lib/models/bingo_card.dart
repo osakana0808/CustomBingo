@@ -16,6 +16,18 @@ class BingoCell {
       isMarked: isMarked ?? this.isMarked,
     );
   }
+
+  Map<String, dynamic> toMap() => {
+        'word': word,
+        'free': isFree,
+        'marked': isMarked,
+      };
+
+  factory BingoCell.fromMap(Map<String, dynamic> map) => BingoCell(
+        word: map['word'] as String,
+        isFree: map['free'] as bool? ?? false,
+        isMarked: map['marked'] as bool? ?? false,
+      );
 }
 
 class BingoCard {

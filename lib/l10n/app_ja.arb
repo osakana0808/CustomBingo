@@ -73,6 +73,31 @@
   "cardPlayEmpty": "カードがありません",
   "cardPlayBingo": "🎉　BINGO!　🎉",
 
+  "cardSave": "保存",
+  "cardSaveDialogTitle": "カードを保存",
+  "cardSaveDialogHint": "保存名を入力",
+  "cardSaveDialogOk": "保存",
+  "cardSaveDialogCancel": "キャンセル",
+  "cardSaveSuccess": "「{name}」を保存しました",
+  "@cardSaveSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "cardResumeButton": "保存したカードを再開（{count}件）",
+  "@cardResumeButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "cardResumeTitle": "保存したカード",
+  "cardResumeEmpty": "保存されたカードはありません",
+  "cardResumeDelete": "削除",
+  "cardResumeSubtitle": "{listName}・{size}・マーク{marked}マス",
+  "@cardResumeSubtitle": {
+    "placeholders": {
+      "listName": { "type": "String" },
+      "size": { "type": "String" },
+      "marked": { "type": "int" }
+    }
+  },
+
   "drawTitle": "抽選",
   "drawHistory": "履歴",
   "drawStop": "終了",
