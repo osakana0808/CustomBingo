@@ -196,6 +196,26 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get saveLimitTitle => 'You can save up to 5';
+
+  @override
+  String get saveLimitMessage =>
+      'Choose a save to overwrite. You can also delete one from the resume list.';
+
+  @override
+  String get saveOverwrite => 'Overwrite';
+
+  @override
+  String saveOverwriteConfirm(String name) {
+    return 'Overwrite \"$name\"?';
+  }
+
+  @override
+  String saveOverwriteSuccess(String name) {
+    return 'Overwrote \"$name\"';
+  }
+
+  @override
   String get drawTitle => 'Draw';
 
   @override

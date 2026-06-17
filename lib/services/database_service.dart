@@ -17,7 +17,7 @@ class DatabaseService {
     final path = join(dir.path, 'custom_bingo.db');
     return openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -45,23 +45,28 @@ class DatabaseService {
       )
     ''');
 
-    await _createSaveTables(db);
+    await _createDrawSessions(db);
+    await _createSavedCards(db);
   }
 
-  // 既存ユーザー（version 1）のデータを保持したまま保存用テーブルを追加する
+  // 既存ユーザーのデータを保持したまま保存用テーブルを段階的に追加する。
+  // 開発途中で version 2 に draw_sessions のみ作成した端末も救済できるよう、
+  // 各ステップは IF NOT EXISTS で冪等にしている。
   static Future<void> _onUpgrade(
       Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
-      await _createSaveTables(db);
+      await _createDrawSessions(db);
+    }
+    if (oldVersion < 3) {
+      await _createSavedCards(db);
     }
   }
 
-  // 進捗保存（抽選・カード）のテーブルを作成する。
-  // 再開に必要な情報を自己完結で持つため、リスト削除時の連動は行わず
-  // list_name をスナップショットとして保持する。
-  static Future<void> _createSaveTables(Database db) async {
+  // 進捗保存のテーブルは、再開に必要な情報を自己完結で持つため、リスト削除時の
+  // 連動は行わず list_name をスナップショットとして保持する。
+  static Future<void> _createDrawSessions(Database db) async {
     await db.execute('''
-      CREATE TABLE draw_sessions (
+      CREATE TABLE IF NOT EXISTS draw_sessions (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         list_id TEXT NOT NULL,
@@ -71,9 +76,11 @@ class DatabaseService {
         updated_at INTEGER NOT NULL
       )
     ''');
+  }
 
+  static Future<void> _createSavedCards(Database db) async {
     await db.execute('''
-      CREATE TABLE saved_cards (
+      CREATE TABLE IF NOT EXISTS saved_cards (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         card_id TEXT NOT NULL,

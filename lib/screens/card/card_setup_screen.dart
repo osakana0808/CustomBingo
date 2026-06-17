@@ -105,7 +105,11 @@ class _CardSetupScreenState extends ConsumerState<CardSetupScreen> {
   }
 
   void _resume(SavedBingoCard saved) {
-    ref.read(cardProvider.notifier).setCard(saved.toBingoCard());
+    final card = saved.toBingoCard();
+    ref.read(cardProvider.notifier).setCard(card);
+    // 復元直後は保存時点と同じ状態なので、変更がなければ閉じる確認を省略する
+    ref.read(lastSavedCardSignatureProvider.notifier).state =
+        cardSignature(card);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const CardPlayScreen()),
@@ -168,6 +172,8 @@ class _CardSetupScreenState extends ConsumerState<CardSetupScreen> {
         hasFreeSpace: _hasFreeSpace,
       );
       ref.read(cardProvider.notifier).setCard(card);
+      // 新規カードは未保存。閉じる時に確認させるため署名をクリアする
+      ref.read(lastSavedCardSignatureProvider.notifier).state = null;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => const CardPlayScreen()),

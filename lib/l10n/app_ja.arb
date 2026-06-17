@@ -98,6 +98,18 @@
     }
   },
 
+  "saveLimitTitle": "保存できるのは5件までです",
+  "saveLimitMessage": "上書きする保存先を選んでください。不要なものは再開リストから削除できます。",
+  "saveOverwrite": "上書き",
+  "saveOverwriteConfirm": "「{name}」に上書きしますか？",
+  "@saveOverwriteConfirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "saveOverwriteSuccess": "「{name}」に上書き保存しました",
+  "@saveOverwriteSuccess": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
   "drawTitle": "抽選",
   "drawHistory": "履歴",
   "drawStop": "終了",

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:uuid/uuid.dart';
 import '../../app.dart';
+import '../../constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_list.dart';
 import '../../models/draw_session.dart';
@@ -78,26 +79,33 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
     );
   }
 
-  // 終了すると抽選履歴が失われ復帰できないため、終了前に確認する
+  // 終了すると抽選履歴が失われ復帰できないため、終了前に確認する。
+  // ただし保存後に変更がなければ復元できるので確認は省略する。
   Future<void> _confirmStop(AppLocalizations l10n) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.drawStopConfirmTitle),
-        content: Text(l10n.drawStopConfirmMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: Text(l10n.drawStopCancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.drawStopConfirm),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true && mounted) {
+    final session = ref.read(drawProvider);
+    final savedSig = ref.read(lastSavedSessionSignatureProvider);
+    final unsaved = session != null && drawSignature(session) != savedSig;
+    if (unsaved) {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(l10n.drawStopConfirmTitle),
+          content: Text(l10n.drawStopConfirmMessage),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.drawStopCancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(l10n.drawStopConfirm),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+    }
+    if (mounted) {
       ref.read(drawProvider.notifier).reset();
       setState(() => _displayedResult = null);
     }
@@ -106,17 +114,65 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
   // 現在の進行状況を名前付きで保存する（麻雀など長時間の進行を中断・再開できる）
   Future<void> _saveSession(DrawSession session, AppLocalizations l10n) async {
     final lists = ref.read(bingoListsProvider).valueOrNull ?? [];
-    BingoList? list;
+    String listName = '';
     for (final l in lists) {
       if (l.id == session.listId) {
-        list = l;
+        listName = l.name;
         break;
       }
     }
+    final existing = ref.read(savedSessionsProvider).valueOrNull ?? [];
+
+    // 上限に達している場合は上書き保存（または削除を促す）
+    if (existing.length >= kMaxSavedSlots) {
+      final targetId = await showSaveOverwritePicker(
+        context: context,
+        title: l10n.saveLimitTitle,
+        message: l10n.saveLimitMessage,
+        cancelLabel: l10n.listCancel,
+        entries: [
+          for (final s in existing)
+            OverwriteEntry(
+              id: s.id,
+              name: s.name,
+              subtitle: l10n.drawResumeSubtitle(
+                  s.listName, s.drawnItems.length, s.remaining.length),
+            ),
+        ],
+      );
+      if (targetId == null || !mounted) return;
+      final target = existing.firstWhere((s) => s.id == targetId);
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Text(l10n.saveOverwriteConfirm(target.name)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.listCancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(l10n.saveOverwrite),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+      await _persistSession(session, target.id, target.name, listName);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.saveOverwriteSuccess(target.name))),
+        );
+      }
+      return;
+    }
+
+    // 通常の新規保存
     final name = await showDialog<String>(
       context: context,
       builder: (ctx) => SaveNameDialog(
-        initial: list?.name ?? '',
+        initial: listName,
         title: l10n.drawSaveDialogTitle,
         hint: l10n.drawSaveDialogHint,
         okLabel: l10n.drawSaveDialogOk,
@@ -125,27 +181,38 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
     );
     if (name == null || name.isEmpty) return;
     const uuid = Uuid();
+    await _persistSession(session, uuid.v4(), name, listName);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.drawSaveSuccess(name))),
+      );
+    }
+  }
+
+  Future<void> _persistSession(
+      DrawSession session, String id, String name, String listName) async {
     final saved = SavedDrawSession(
-      id: uuid.v4(),
+      id: id,
       name: name,
       listId: session.listId,
-      listName: list?.name ?? '',
+      listName: listName,
       drawnItems: session.drawnItems,
       remaining: session.remaining,
       updatedAt: DateTime.now(),
     );
     await ref.read(savedSessionsProvider.notifier).save(saved);
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.drawSaveSuccess(saved.name))),
-      );
-    }
+    ref.read(lastSavedSessionSignatureProvider.notifier).state =
+        drawSignature(session);
   }
 
   void _resume(SavedDrawSession saved) {
+    final session = saved.toDrawSession();
     setState(() => _displayedResult =
         saved.drawnItems.isEmpty ? null : saved.drawnItems.last);
-    ref.read(drawProvider.notifier).restore(saved.toDrawSession());
+    ref.read(drawProvider.notifier).restore(session);
+    // 復元直後は保存時点と同じなので、変更がなければ終了確認を省略する
+    ref.read(lastSavedSessionSignatureProvider.notifier).state =
+        drawSignature(session);
   }
 
   Future<void> _showResumeSheet(AppLocalizations l10n) async {
@@ -472,6 +539,8 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
     ref
         .read(drawProvider.notifier)
         .start(list.id, list.items.map((i) => i.word).toList());
+    // 新規開始は未保存。終了時に確認させるため署名をクリアする
+    ref.read(lastSavedSessionSignatureProvider.notifier).state = null;
   }
 
   Future<void> _draw() async {

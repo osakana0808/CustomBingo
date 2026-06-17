@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import '../../constants.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_card.dart';
-import '../../models/bingo_list.dart';
 import '../../models/saved_bingo_card.dart';
 import '../../providers/card_provider.dart';
 import '../../providers/list_provider.dart';
@@ -23,13 +23,17 @@ class CardPlayScreen extends ConsumerWidget {
     }
 
     // ゲーム進行中（マークあり）は、誤って閉じて二度と同じカードに
-    // 戻れなくなるのを防ぐため、閉じる前に確認する
+    // 戻れなくなるのを防ぐため、閉じる前に確認する。
+    // ただし保存後に変更がなければ復元できるので確認は省略する。
     final hasProgress = card.cells.any(
       (row) => row.any((c) => c.isMarked && !c.isFree),
     );
+    final savedSignature = ref.watch(lastSavedCardSignatureProvider);
+    final hasUnsavedProgress =
+        hasProgress && cardSignature(card) != savedSignature;
 
     return PopScope(
-      canPop: !hasProgress,
+      canPop: !hasUnsavedProgress,
       onPopInvokedWithResult: (didPop, _) async {
         if (didPop) return;
         final confirmed = await showDialog<bool>(
@@ -148,17 +152,74 @@ class CardPlayScreen extends ConsumerWidget {
     AppLocalizations l10n,
   ) async {
     final lists = ref.read(bingoListsProvider).valueOrNull ?? [];
-    BingoList? list;
+    String listName = '';
     for (final l in lists) {
       if (l.id == card.listId) {
-        list = l;
+        listName = l.name;
         break;
       }
     }
+    final existing = ref.read(savedCardsProvider).valueOrNull ?? [];
+
+    // 上限に達している場合は上書き保存（または削除を促す）
+    if (existing.length >= kMaxSavedSlots) {
+      final targetId = await showSaveOverwritePicker(
+        context: context,
+        title: l10n.saveLimitTitle,
+        message: l10n.saveLimitMessage,
+        cancelLabel: l10n.listCancel,
+        entries: [
+          for (final c in existing)
+            OverwriteEntry(
+              id: c.id,
+              name: c.name,
+              subtitle: l10n.cardResumeSubtitle(
+                  c.listName, '${c.size}×${c.size}', c.markedCount),
+            ),
+        ],
+      );
+      if (targetId == null || !context.mounted) return;
+      final target = existing.firstWhere((c) => c.id == targetId);
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Text(l10n.saveOverwriteConfirm(target.name)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.listCancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(l10n.saveOverwrite),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+      final updated = SavedBingoCard.fromCard(
+        id: target.id,
+        name: target.name,
+        listName: listName,
+        card: card,
+        updatedAt: DateTime.now(),
+      );
+      await ref.read(savedCardsProvider.notifier).save(updated);
+      ref.read(lastSavedCardSignatureProvider.notifier).state =
+          cardSignature(card);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.saveOverwriteSuccess(updated.name))),
+        );
+      }
+      return;
+    }
+
+    // 通常の新規保存
     final name = await showDialog<String>(
       context: context,
       builder: (ctx) => SaveNameDialog(
-        initial: list?.name ?? '',
+        initial: listName,
         title: l10n.cardSaveDialogTitle,
         hint: l10n.cardSaveDialogHint,
         okLabel: l10n.cardSaveDialogOk,
@@ -170,11 +231,13 @@ class CardPlayScreen extends ConsumerWidget {
     final saved = SavedBingoCard.fromCard(
       id: uuid.v4(),
       name: name,
-      listName: list?.name ?? '',
+      listName: listName,
       card: card,
       updatedAt: DateTime.now(),
     );
     await ref.read(savedCardsProvider.notifier).save(saved);
+    ref.read(lastSavedCardSignatureProvider.notifier).state =
+        cardSignature(card);
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.cardSaveSuccess(saved.name))),

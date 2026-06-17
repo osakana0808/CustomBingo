@@ -195,6 +195,25 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get saveLimitTitle => '保存できるのは5件までです';
+
+  @override
+  String get saveLimitMessage => '上書きする保存先を選んでください。不要なものは再開リストから削除できます。';
+
+  @override
+  String get saveOverwrite => '上書き';
+
+  @override
+  String saveOverwriteConfirm(String name) {
+    return '「$name」に上書きしますか？';
+  }
+
+  @override
+  String saveOverwriteSuccess(String name) {
+    return '「$name」に上書き保存しました';
+  }
+
+  @override
   String get drawTitle => '抽選';
 
   @override

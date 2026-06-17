@@ -27,3 +27,11 @@ class DrawNotifier extends Notifier<DrawSession?> {
 
 final drawProvider =
     NotifierProvider<DrawNotifier, DrawSession?>(DrawNotifier.new);
+
+/// 直近に保存した時点の抽選状態の署名。現在の署名と一致すれば「保存後に
+/// 変更がない」とみなし、終了確認を省略できる。新規開始時は null にリセット。
+final lastSavedSessionSignatureProvider = StateProvider<String?>((ref) => null);
+
+/// 抽選の署名。抽選は追加のみなので件数で変化を判定できる。
+String drawSignature(DrawSession session) =>
+    '${session.listId}:${session.drawnItems.length}';

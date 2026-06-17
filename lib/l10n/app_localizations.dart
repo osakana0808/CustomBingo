@@ -434,6 +434,36 @@ abstract class AppLocalizations {
   /// **'{listName}・{size}・マーク{marked}マス'**
   String cardResumeSubtitle(String listName, String size, int marked);
 
+  /// No description provided for @saveLimitTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'保存できるのは5件までです'**
+  String get saveLimitTitle;
+
+  /// No description provided for @saveLimitMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'上書きする保存先を選んでください。不要なものは再開リストから削除できます。'**
+  String get saveLimitMessage;
+
+  /// No description provided for @saveOverwrite.
+  ///
+  /// In ja, this message translates to:
+  /// **'上書き'**
+  String get saveOverwrite;
+
+  /// No description provided for @saveOverwriteConfirm.
+  ///
+  /// In ja, this message translates to:
+  /// **'「{name}」に上書きしますか？'**
+  String saveOverwriteConfirm(String name);
+
+  /// No description provided for @saveOverwriteSuccess.
+  ///
+  /// In ja, this message translates to:
+  /// **'「{name}」に上書き保存しました'**
+  String saveOverwriteSuccess(String name);
+
   /// No description provided for @drawTitle.
   ///
   /// In ja, this message translates to:
