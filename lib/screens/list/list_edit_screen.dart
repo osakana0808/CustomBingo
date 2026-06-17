@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../l10n/app_localizations.dart';
@@ -57,7 +58,9 @@ class _ListEditScreenState extends ConsumerState<ListEditScreen> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        // 下部の要素がシステムナビゲーション領域に被って押しにくくなるのを防ぐ
+        padding: EdgeInsets.fromLTRB(
+            16, 16, 16, 16 + MediaQuery.viewPaddingOf(context).bottom),
         children: [
           TextField(
             controller: _nameCtrl,
@@ -183,8 +186,16 @@ class _WordDialogState extends State<_WordDialog> {
       content: TextField(
         controller: _ctrl,
         autofocus: true,
+        // 麻雀など文字量が多いマスのために改行入力を許容する。
+        // 改行は確定キーに割り当てるため、確定はOKボタンで行う。
+        keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.newline,
+        minLines: 1,
+        maxLines: 4,
+        // maxLines は表示高さのみで入力行数は制限しないため、改行は3つ
+        // （＝4行）までに制限する
+        inputFormatters: [_MaxLinesFormatter(4)],
         decoration: InputDecoration(hintText: l10n.editWordHint),
-        onSubmitted: (v) => Navigator.pop(context, v),
       ),
       actions: [
         TextButton(
@@ -192,10 +203,27 @@ class _WordDialogState extends State<_WordDialog> {
           child: Text(l10n.listCancel),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context, _ctrl.text),
+          onPressed: () => Navigator.pop(context, _ctrl.text.trim()),
           child: Text(l10n.editWordOk),
         ),
       ],
     );
+  }
+}
+
+/// 改行数を制限し、最大 [maxLines] 行までしか入力できないようにする。
+/// 上限を超える編集は拒否し、直前の値を維持する。
+class _MaxLinesFormatter extends TextInputFormatter {
+  final int maxLines;
+  const _MaxLinesFormatter(this.maxLines);
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final lineCount = '\n'.allMatches(newValue.text).length + 1;
+    if (lineCount > maxLines) return oldValue;
+    return newValue;
   }
 }

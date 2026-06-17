@@ -54,7 +54,28 @@ class CardPlayScreen extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.refresh),
               tooltip: l10n.cardPlayReset,
-              onPressed: () {
+              // 誤タップでマークが全消去されるのを防ぐため、進行中は確認する
+              onPressed: () async {
+                if (hasProgress) {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(l10n.cardPlayResetConfirmTitle),
+                      content: Text(l10n.cardPlayResetConfirmMessage),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: Text(l10n.cardPlayResetCancel),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: Text(l10n.cardPlayResetConfirm),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirmed != true) return;
+                }
                 var updated = card;
                 for (int r = 0; r < card.size; r++) {
                   for (int c = 0; c < card.size; c++) {
@@ -115,20 +136,36 @@ class _BingoGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: card.size,
-        crossAxisSpacing: 4,
-        mainAxisSpacing: 4,
-      ),
-      itemCount: card.size * card.size,
-      itemBuilder: (context, index) {
-        final row = index ~/ card.size;
-        final col = index % card.size;
-        final cell = card.cells[row][col];
-        return _BingoCell(
-          cell: cell,
-          onTap: () => ref.read(cardProvider.notifier).toggleCell(row, col),
+    // 横持ちでも縦持ちでもカード全体が画面内に収まるよう、利用可能な
+    // 短辺に合わせた正方形領域にグリッドを収め、スクロールさせない
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final side = constraints.biggest.shortestSide;
+        return Center(
+          child: SizedBox(
+            width: side,
+            height: side,
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: card.size,
+                crossAxisSpacing: 4,
+                mainAxisSpacing: 4,
+              ),
+              itemCount: card.size * card.size,
+              itemBuilder: (context, index) {
+                final row = index ~/ card.size;
+                final col = index % card.size;
+                final cell = card.cells[row][col];
+                return _BingoCell(
+                  cell: cell,
+                  onTap: () =>
+                      ref.read(cardProvider.notifier).toggleCell(row, col),
+                );
+              },
+            ),
+          ),
         );
       },
     );

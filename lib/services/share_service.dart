@@ -4,7 +4,9 @@ import '../models/bingo_list.dart';
 class ShareService {
   // エクスポート形式は英語で統一（世界中のユーザーで互換性が保たれる）
   static String encode(BingoList list) {
-    final words = list.items.map((i) => i.word).join(', ');
+    // 単語内の改行は区切り（行・カンマ）と衝突するため、リテラル \n に
+    // エスケープしてから連結する（インポート時に復元）
+    final words = list.items.map((i) => _escape(i.word)).join(', ');
     return '[BingoList]\n'
         'name: ${list.name}\n'
         'description: ${list.description}\n'
@@ -33,8 +35,10 @@ class ShareService {
       } else if (pastHeader || (line.trim().isEmpty && name.isNotEmpty)) {
         pastHeader = true;
         if (line.trim().isNotEmpty) {
-          words.addAll(
-              line.split(',').map((w) => w.trim()).where((w) => w.isNotEmpty));
+          words.addAll(line
+              .split(',')
+              .map((w) => _unescape(w.trim()))
+              .where((w) => w.isNotEmpty));
         }
       }
     }
@@ -52,5 +56,31 @@ class ShareService {
           .toList(),
       hasFreeSpace: hasFreeSpace,
     );
+  }
+
+  // 改行を含む単語を1行・カンマ区切り形式で安全に往復させるためのエスケープ。
+  // バックスラッシュを先にエスケープし、その後で改行を \n に変換する。
+  static String _escape(String word) =>
+      word.replaceAll('\\', '\\\\').replaceAll('\r\n', '\n').replaceAll('\n', '\\n');
+
+  static String _unescape(String word) {
+    final buffer = StringBuffer();
+    for (int i = 0; i < word.length; i++) {
+      final ch = word[i];
+      if (ch == '\\' && i + 1 < word.length) {
+        final next = word[i + 1];
+        if (next == 'n') {
+          buffer.write('\n');
+          i++;
+          continue;
+        } else if (next == '\\') {
+          buffer.write('\\');
+          i++;
+          continue;
+        }
+      }
+      buffer.write(ch);
+    }
+    return buffer.toString();
   }
 }
