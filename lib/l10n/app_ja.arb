@@ -148,6 +148,11 @@
   "cardPlayExitConfirm": "閉じる",
   "cardPlayExitCancel": "キャンセル",
 
+  "cardPlayResetConfirmTitle": "リセットしますか？",
+  "cardPlayResetConfirmMessage": "マークがすべて消えます。この操作は取り消せません。",
+  "cardPlayResetConfirm": "リセット",
+  "cardPlayResetCancel": "キャンセル",
+
   "menuPrivacyPolicy": "プライバシーポリシー",
   "menuTerms": "利用規約",
   "menuAbout": "アプリについて",

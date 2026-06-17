@@ -317,6 +317,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get cardPlayExitCancel => 'キャンセル';
 
   @override
+  String get cardPlayResetConfirmTitle => 'リセットしますか？';
+
+  @override
+  String get cardPlayResetConfirmMessage => 'マークがすべて消えます。この操作は取り消せません。';
+
+  @override
+  String get cardPlayResetConfirm => 'リセット';
+
+  @override
+  String get cardPlayResetCancel => 'キャンセル';
+
+  @override
   String get menuPrivacyPolicy => 'プライバシーポリシー';
 
   @override

@@ -668,6 +668,30 @@ abstract class AppLocalizations {
   /// **'キャンセル'**
   String get cardPlayExitCancel;
 
+  /// No description provided for @cardPlayResetConfirmTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'リセットしますか？'**
+  String get cardPlayResetConfirmTitle;
+
+  /// No description provided for @cardPlayResetConfirmMessage.
+  ///
+  /// In ja, this message translates to:
+  /// **'マークがすべて消えます。この操作は取り消せません。'**
+  String get cardPlayResetConfirmMessage;
+
+  /// No description provided for @cardPlayResetConfirm.
+  ///
+  /// In ja, this message translates to:
+  /// **'リセット'**
+  String get cardPlayResetConfirm;
+
+  /// No description provided for @cardPlayResetCancel.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get cardPlayResetCancel;
+
   /// No description provided for @menuPrivacyPolicy.
   ///
   /// In ja, this message translates to:

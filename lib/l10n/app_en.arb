@@ -115,6 +115,11 @@
   "cardPlayExitConfirm": "Close",
   "cardPlayExitCancel": "Cancel",
 
+  "cardPlayResetConfirmTitle": "Reset the card?",
+  "cardPlayResetConfirmMessage": "All marks will be cleared. This can't be undone.",
+  "cardPlayResetConfirm": "Reset",
+  "cardPlayResetCancel": "Cancel",
+
   "menuPrivacyPolicy": "Privacy Policy",
   "menuTerms": "Terms of Service",
   "menuAbout": "About This App",

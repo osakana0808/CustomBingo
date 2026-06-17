@@ -321,6 +321,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cardPlayExitCancel => 'Cancel';
 
   @override
+  String get cardPlayResetConfirmTitle => 'Reset the card?';
+
+  @override
+  String get cardPlayResetConfirmMessage =>
+      'All marks will be cleared. This can\'t be undone.';
+
+  @override
+  String get cardPlayResetConfirm => 'Reset';
+
+  @override
+  String get cardPlayResetCancel => 'Cancel';
+
+  @override
   String get menuPrivacyPolicy => 'Privacy Policy';
 
   @override
