@@ -80,10 +80,7 @@
   "saveLimitTitle": "You can save up to 5",
   "saveLimitMessage": "Choose a save to overwrite. You can also delete one from the resume list.",
   "saveOverwrite": "Overwrite",
-  "saveOverwriteConfirm": "Overwrite \"{name}\"?",
-  "@saveOverwriteConfirm": {
-    "placeholders": { "name": { "type": "String" } }
-  },
+  "saveOverwriteTitle": "Overwrite save",
   "saveOverwriteSuccess": "Overwrote \"{name}\"",
   "@saveOverwriteSuccess": {
     "placeholders": { "name": { "type": "String" } }

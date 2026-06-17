@@ -142,27 +142,22 @@ class _DrawScreenState extends ConsumerState<DrawScreen> {
       );
       if (targetId == null || !mounted) return;
       final target = existing.firstWhere((s) => s.id == targetId);
-      final confirmed = await showDialog<bool>(
+      // 上書き先の名前をプリセットしつつ、変更も可能にする
+      final newName = await showDialog<String>(
         context: context,
-        builder: (ctx) => AlertDialog(
-          content: Text(l10n.saveOverwriteConfirm(target.name)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l10n.listCancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(l10n.saveOverwrite),
-            ),
-          ],
+        builder: (ctx) => SaveNameDialog(
+          initial: target.name,
+          title: l10n.saveOverwriteTitle,
+          hint: l10n.drawSaveDialogHint,
+          okLabel: l10n.saveOverwrite,
+          cancelLabel: l10n.drawSaveDialogCancel,
         ),
       );
-      if (confirmed != true) return;
-      await _persistSession(session, target.id, target.name, listName);
+      if (newName == null || newName.isEmpty) return;
+      await _persistSession(session, target.id, newName, listName);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.saveOverwriteSuccess(target.name))),
+          SnackBar(content: Text(l10n.saveOverwriteSuccess(newName))),
         );
       }
       return;

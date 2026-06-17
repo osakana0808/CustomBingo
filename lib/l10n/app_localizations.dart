@@ -452,11 +452,11 @@ abstract class AppLocalizations {
   /// **'上書き'**
   String get saveOverwrite;
 
-  /// No description provided for @saveOverwriteConfirm.
+  /// No description provided for @saveOverwriteTitle.
   ///
   /// In ja, this message translates to:
-  /// **'「{name}」に上書きしますか？'**
-  String saveOverwriteConfirm(String name);
+  /// **'上書き保存'**
+  String get saveOverwriteTitle;
 
   /// No description provided for @saveOverwriteSuccess.
   ///

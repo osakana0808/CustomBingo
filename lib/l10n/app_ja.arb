@@ -101,10 +101,7 @@
   "saveLimitTitle": "保存できるのは5件までです",
   "saveLimitMessage": "上書きする保存先を選んでください。不要なものは再開リストから削除できます。",
   "saveOverwrite": "上書き",
-  "saveOverwriteConfirm": "「{name}」に上書きしますか？",
-  "@saveOverwriteConfirm": {
-    "placeholders": { "name": { "type": "String" } }
-  },
+  "saveOverwriteTitle": "上書き保存",
   "saveOverwriteSuccess": "「{name}」に上書き保存しました",
   "@saveOverwriteSuccess": {
     "placeholders": { "name": { "type": "String" } }

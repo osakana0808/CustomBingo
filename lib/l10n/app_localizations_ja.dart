@@ -204,9 +204,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get saveOverwrite => '上書き';
 
   @override
-  String saveOverwriteConfirm(String name) {
-    return '「$name」に上書きしますか？';
-  }
+  String get saveOverwriteTitle => '上書き保存';
 
   @override
   String saveOverwriteSuccess(String name) {

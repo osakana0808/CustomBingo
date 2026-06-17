@@ -206,9 +206,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveOverwrite => 'Overwrite';
 
   @override
-  String saveOverwriteConfirm(String name) {
-    return 'Overwrite \"$name\"?';
-  }
+  String get saveOverwriteTitle => 'Overwrite save';
 
   @override
   String saveOverwriteSuccess(String name) {

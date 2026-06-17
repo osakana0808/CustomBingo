@@ -180,26 +180,21 @@ class CardPlayScreen extends ConsumerWidget {
       );
       if (targetId == null || !context.mounted) return;
       final target = existing.firstWhere((c) => c.id == targetId);
-      final confirmed = await showDialog<bool>(
+      // 上書き先の名前をプリセットしつつ、変更も可能にする
+      final newName = await showDialog<String>(
         context: context,
-        builder: (ctx) => AlertDialog(
-          content: Text(l10n.saveOverwriteConfirm(target.name)),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l10n.listCancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(l10n.saveOverwrite),
-            ),
-          ],
+        builder: (ctx) => SaveNameDialog(
+          initial: target.name,
+          title: l10n.saveOverwriteTitle,
+          hint: l10n.cardSaveDialogHint,
+          okLabel: l10n.saveOverwrite,
+          cancelLabel: l10n.cardSaveDialogCancel,
         ),
       );
-      if (confirmed != true) return;
+      if (newName == null || newName.isEmpty) return;
       final updated = SavedBingoCard.fromCard(
         id: target.id,
-        name: target.name,
+        name: newName,
         listName: listName,
         card: card,
         updatedAt: DateTime.now(),
