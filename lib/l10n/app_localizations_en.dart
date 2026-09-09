@@ -364,6 +364,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paywallRestore => 'Restore Purchases';
 
   @override
+  String paywallPricePerMonth(String price) {
+    return '$price/month';
+  }
+
+  @override
+  String paywallPricePerYear(String price) {
+    return '$price/year';
+  }
+
+  @override
+  String paywallSubscriptionInfo(String price) {
+    return 'Custom Bingo PRO (Host Mode)\n$price · auto-renewing subscription';
+  }
+
+  @override
+  String get paywallLegalAndroid =>
+      'Payment will be charged to your Google Play account.\nSubscriptions auto-renew unless cancelled at least 24 hours before the end of the current period.';
+
+  @override
   String get paywallLegal =>
       'Payment will be charged to your Apple ID.\nSubscriptions auto-renew unless cancelled at least 24 hours before the end of the current period.';
 

@@ -361,6 +361,25 @@ class AppLocalizationsJa extends AppLocalizations {
   String get paywallRestore => '購入を復元';
 
   @override
+  String paywallPricePerMonth(String price) {
+    return '$price/月';
+  }
+
+  @override
+  String paywallPricePerYear(String price) {
+    return '$price/年';
+  }
+
+  @override
+  String paywallSubscriptionInfo(String price) {
+    return 'Custom Bingo PRO（司会者モード）\n$price・自動更新サブスクリプション';
+  }
+
+  @override
+  String get paywallLegalAndroid =>
+      '購入は Google Play アカウントに請求されます。\nサブスクリプションは次の更新日の 24 時間前にキャンセルしない限り自動更新されます。';
+
+  @override
   String get paywallLegal =>
       '購入は Apple ID に請求されます。\nサブスクリプションは次の更新日の 24 時間前にキャンセルしない限り自動更新されます。';
 

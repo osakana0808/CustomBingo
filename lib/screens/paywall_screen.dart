@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import '../app.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/purchase_provider.dart';
+import '../services/legal_links.dart';
 
 class PaywallScreen extends ConsumerWidget {
   const PaywallScreen({super.key});
@@ -98,7 +101,7 @@ class PaywallScreen extends ConsumerWidget {
                   // Non-consumable (lifetime) or monthly を探す
                   final package = _pickPackage(offering);
                   return _PriceButton(
-                    priceString: package?.storeProduct.priceString,
+                    priceString: _priceWithPeriod(package, l10n),
                     loading: isLoading,
                     onTap: package == null || isLoading
                         ? null
@@ -118,17 +121,70 @@ class PaywallScreen extends ConsumerWidget {
               ),
 
               const SizedBox(height: 8),
+              // ── サブスクリプションの名称・期間・価格 ──────
+              offeringAsync.maybeWhen(
+                data: (offering) {
+                  final price = _priceWithPeriod(_pickPackage(offering), l10n);
+                  if (price == null) return const SizedBox.shrink();
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      l10n.paywallSubscriptionInfo(price),
+                      style: const TextStyle(
+                        color: WaColors.cream,
+                        fontSize: 12,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                },
+                orElse: () => const SizedBox.shrink(),
+              ),
               Text(
-                l10n.paywallLegal,
+                Platform.isIOS ? l10n.paywallLegal : l10n.paywallLegalAndroid,
                 style:
                     const TextStyle(color: WaColors.creamDim, fontSize: 11, height: 1.5),
                 textAlign: TextAlign.center,
+              ),
+              // ── 利用規約・プライバシーポリシー（App Store ガイドライン 3.1.2）──
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _LegalLinkButton(
+                    label: l10n.menuTerms,
+                    onTap: () =>
+                        LegalLinks.open(context, LegalLinks.termsPage, l10n),
+                  ),
+                  const Text('·',
+                      style: TextStyle(color: WaColors.creamDim, fontSize: 11)),
+                  _LegalLinkButton(
+                    label: l10n.menuPrivacyPolicy,
+                    onTap: () =>
+                        LegalLinks.open(context, LegalLinks.privacyPage, l10n),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  /// 「¥200/月」のように期間つきの価格文字列を作る。
+  /// Apple はペイウォールに「名称・期間・価格」の明示を求めている（3.1.2）。
+  String? _priceWithPeriod(Package? package, AppLocalizations l10n) {
+    if (package == null) return null;
+    final price = package.storeProduct.priceString;
+    switch (package.packageType) {
+      case PackageType.monthly:
+        return l10n.paywallPricePerMonth(price);
+      case PackageType.annual:
+        return l10n.paywallPricePerYear(price);
+      default:
+        return price;
+    }
   }
 
   /// Offering から適切なパッケージを選ぶ（monthly > annual > lifetime の順）
@@ -197,6 +253,34 @@ class PaywallScreen extends ConsumerWidget {
         );
       }
     }
+  }
+}
+
+// ── 法的リンク ───────────────────────────────────────────────
+class _LegalLinkButton extends StatelessWidget {
+  const _LegalLinkButton({required this.label, required this.onTap});
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        minimumSize: Size.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: WaColors.creamDim,
+          fontSize: 11,
+          decoration: TextDecoration.underline,
+          decorationColor: WaColors.creamDim,
+        ),
+      ),
+    );
   }
 }
 

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/bingo_list.dart';
 import '../../providers/list_provider.dart';
+import '../../services/legal_links.dart';
 import '../../services/share_service.dart';
 import 'list_edit_screen.dart';
 import 'import_screen.dart';
@@ -87,15 +87,13 @@ class ListScreen extends ConsumerWidget {
     );
   }
 
-  static const _siteBase = 'https://osakana0808.github.io/CustomBingo';
-
   Future<void> _onMenuSelected(
       BuildContext context, _MenuAction action, AppLocalizations l10n) async {
     switch (action) {
       case _MenuAction.privacy:
-        await _openPage(context, 'privacy.html', l10n);
+        await LegalLinks.open(context, LegalLinks.privacyPage, l10n);
       case _MenuAction.terms:
-        await _openPage(context, 'terms.html', l10n);
+        await LegalLinks.open(context, LegalLinks.termsPage, l10n);
       case _MenuAction.about:
         final info = await PackageInfo.fromPlatform();
         if (!context.mounted) return;
@@ -105,18 +103,6 @@ class ListScreen extends ConsumerWidget {
           applicationVersion: info.version,
           applicationLegalese: '© 2026 muraemon',
         );
-    }
-  }
-
-  Future<void> _openPage(
-      BuildContext context, String page, AppLocalizations l10n) async {
-    final isJa = Localizations.localeOf(context).languageCode == 'ja';
-    final url = Uri.parse(isJa ? '$_siteBase/$page' : '$_siteBase/en/$page');
-    final ok = await launchUrl(url, mode: LaunchMode.externalApplication);
-    if (!ok && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.menuLinkError)),
-      );
     }
   }
 

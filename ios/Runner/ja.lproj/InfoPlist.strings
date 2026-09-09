@@ -1,0 +1,3 @@
+/* Japanese app name (Android の values-ja/strings.xml と対応) */
+"CFBundleDisplayName" = "カスタムビンゴ";
+"CFBundleName" = "カスタムビンゴ";
