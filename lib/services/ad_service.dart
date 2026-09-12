@@ -15,11 +15,10 @@ import 'dart:io';
 class AdService {
   AdService._();
 
-  // ── バナー広告ユニットID ───────────────────────────────
-  // TODO(release): Google 公式のテスト用IDのまま。本番IDに差し替える。
+  // ── バナー広告ユニットID（本番・2026-09-12 差し替え済み） ─────
   static const String _bannerAndroid =
-      'ca-app-pub-3940256099942544/6300978111';
-  static const String _bannerIos = 'ca-app-pub-3940256099942544/2934735716';
+      'ca-app-pub-2069799878210171/4186352047';
+  static const String _bannerIos = 'ca-app-pub-2069799878210171/3831128823';
 
   static String get bannerAdUnitId =>
       Platform.isAndroid ? _bannerAndroid : _bannerIos;
