@@ -734,6 +734,30 @@ abstract class AppLocalizations {
   /// **'購入を復元'**
   String get paywallRestore;
 
+  /// No description provided for @paywallPricePerMonth.
+  ///
+  /// In ja, this message translates to:
+  /// **'{price}/月'**
+  String paywallPricePerMonth(String price);
+
+  /// No description provided for @paywallPricePerYear.
+  ///
+  /// In ja, this message translates to:
+  /// **'{price}/年'**
+  String paywallPricePerYear(String price);
+
+  /// No description provided for @paywallSubscriptionInfo.
+  ///
+  /// In ja, this message translates to:
+  /// **'Custom Bingo PRO（司会者モード）\n{price}・自動更新サブスクリプション'**
+  String paywallSubscriptionInfo(String price);
+
+  /// No description provided for @paywallLegalAndroid.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入は Google Play アカウントに請求されます。\nサブスクリプションは次の更新日の 24 時間前にキャンセルしない限り自動更新されます。'**
+  String get paywallLegalAndroid;
+
   /// No description provided for @paywallLegal.
   ///
   /// In ja, this message translates to:

@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+4
+version: 1.0.0+8
 
 environment:
   sdk: ^3.9.2
@@ -98,6 +98,10 @@ flutter:
   # the material Icons class.
   generate: true
   uses-material-design: true
+  # google_mobile_ads は CocoaPods のみ、その依存の webview_flutter_wkwebview は
+  # Swift Package Manager を採用しており iOS ビルドが衝突するため SPM を無効化する。
+  config:
+    enable-swift-package-manager: false
 
   assets:
     - assets/images/

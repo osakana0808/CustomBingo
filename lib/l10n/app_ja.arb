@@ -184,6 +184,19 @@
   },
   "paywallBuyButtonNoPrice": "購入する",
   "paywallRestore": "購入を復元",
+  "paywallPricePerMonth": "{price}/月",
+  "@paywallPricePerMonth": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+  "paywallPricePerYear": "{price}/年",
+  "@paywallPricePerYear": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+  "paywallSubscriptionInfo": "Custom Bingo PRO（司会者モード）\n{price}・自動更新サブスクリプション",
+  "@paywallSubscriptionInfo": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+  "paywallLegalAndroid": "購入は Google Play アカウントに請求されます。\nサブスクリプションは次の更新日の 24 時間前にキャンセルしない限り自動更新されます。",
   "paywallLegal": "購入は Apple ID に請求されます。\nサブスクリプションは次の更新日の 24 時間前にキャンセルしない限り自動更新されます。",
   "paywallPurchaseSuccess": "購入が完了しました！",
   "paywallRestoreSuccess": "購入を復元しました！",
